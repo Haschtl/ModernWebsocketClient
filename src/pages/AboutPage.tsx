@@ -34,7 +34,7 @@ class AboutPage extends PureComponent<Props & WithTranslation> {
     Share.share({
       title: this.props.t('WebsocketClient'),
       text: this.props.t("This Websocket Client is really amazing!"),
-      url: 'https://www.websocket.org/echo.html',
+      url: 'https://haschtl.github.io/ModernWebsocketClient/',
       dialogTitle: this.props.t('Share this App with buddies')
     })
   }
@@ -94,7 +94,7 @@ class AboutPage extends PureComponent<Props & WithTranslation> {
           <IonButton expand="full" fill="solid" color="secondary" onClick={this.share}>
             <Trans>Share</Trans>
           </IonButton>
-          <IonButton expand="full" fill="solid" color="secondary" onClick={() => Browser.open({ url: 'https://haschtl.github.io/RealTimeOpenControl/' })}>
+          <IonButton expand="full" fill="solid" color="secondary" onClick={() => Browser.open({ url: 'https://haschtl.github.io/ModernWebsocketClient/' })}>
             <Trans>Github Page</Trans>
           </IonButton>
           <IonButton expand="full" fill="solid" color="secondary" onClick={() => this.exportConnections()}>

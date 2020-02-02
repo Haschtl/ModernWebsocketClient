@@ -1,41 +1,63 @@
-# OpenSource Websocket Client
-## v1.0
+# OpenSource Websocket Client v1.0
 
 ## Description
 
+- This is an **OpenSource **project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
+- This is a simple WebsocketClient-Application with Input-Completition and some small nice features. You can use SecureWebsockets (SSL) or normal Websockets.
+- Currently, you can only connect to one server at a time.
 
+## Installation
 
+- Download the latest version for your system in the Release-Section
+- Soon there will be an Android-App in the PlayStore
+- This app is also hosted on firebase: [https://modern-websocket-client.web.app](WebsocketClient WebApp)
 
 ## Setup this project
-Prerequirements: You need to have Ionic 4 installed
+
+**Prerequirements**: You need to have Ionic 4 installed
+
 If you want build this Websocket Client by your own, you need to follow these steps:
+
 1. Clone this repository and go to it's directory
 2. Execute `npm install` to install the dependencies
 3. Run local server with `ionic serve`
 
+
+
 ## Build 
 To build this App for any system you need to build it with ionic first
+
 'ionic build --release'
+
 The output will be in the "build" folder.
+
+
 
 ### Build for the Web
 The build-process for the web is already finished. You just need the "build" folder.
+
 Go into the "build" folder and execute `serve -p 8050` to run the App at port 8050.
 
 ### Build for Android
-Prerequirements: You need to have Android Studio installed
+**Prerequirements**: You need to have Android Studio installed
+
 You need to add Android with capacitor only once:
+
 `ionic capacitor add android`
 
 Then you can copy the build to AndroidStudio
+
 `ionic capacitor copy android`
 
 After this you need to open Android Studio and build the apk
+
 `npx cap open android`
 
 ### Build for Windows, Linux, Mac with electron
-Prerequirements: You need electron installed
+**Prerequirements**: You need electron installed
+
 You need to add Electron with capacitor only once:
+
 `ionic capacitor add electron`
 
 Copy your build to electron: `npx cap copy`
@@ -43,7 +65,9 @@ Copy your build to electron: `npx cap copy`
 **Important: Change <base href="/"/> -> <base href="./"/> in electron/app/index.html**
 
 Go to the Electron directory `cd electron` and test, if electron works `npm run electron:start`.
+
 Then you can build it for all systems:
+
 ```
 electron-packager . --platform=win32 --overwrite
 electron-packager . --platform=darwin --overwrite
@@ -52,17 +76,19 @@ electron-packager . "WebSocketClient" --all --overwrite
 Exeutables will be in electron/capacitor-app-*/
 
 ### Upload to firebase
-Prerequirements: You need a firebase-account and firebase installed and configured
+**Prerequirements**: You need a firebase-account and firebase installed and configured
+
 Initialize firebase for this App once: `firebase init` and follow the guide.
+
 Then you can upload you build with
 `firebase deploy`
 
 ### Extra: Build electron-windows-app (not working)
 electron-windows-store `
-    --input-directory C:\Users\hasch\myApp\electron `
-    --output-directory C:\Users\hasch\myApp\WindowsStore `
+    --input-directory PATHTOAPP\electron `
+    --output-directory PATHTOAPP\WindowsStore `
     --package-version 1.0.0.0 `
-    --package-name RTOCRemote
+    --package-name WebsocketClient
 
 
 ## Example systemd-service
@@ -89,8 +115,11 @@ RestartSec=3
 WantedBy=multi-user.target
 ```
 After creating the file, you need to call `sudo systemctl daemon-reload`.
+
 Then you can start the service with `sudo systemctl start WebsocketClient`.
+
 To run it after boot: `sudo systemctl enable WebsocketClient`.
+
 To get the log of the service: `sudo journalctl -u WebsocketClient`.
 
 ## Example Apache2-Configuration (with SSL)
@@ -126,4 +155,5 @@ To get the log of the service: `sudo journalctl -u WebsocketClient`.
 </IfModule>
 ```
 Don't forget to enable the apache-config with `sudo a2ensite PAGENAME`
+
 To add SSL-Encryption, just call `sudo certbot -d MYSERVERADRESS`
