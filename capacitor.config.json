@@ -1,0 +1,20 @@
+{
+  "appId": "io.websocketclient.starter",
+  "appName": "WebsocketClient",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {},
+  "backgroundColor": "#00000000",
+  "plugins": {
+    "SplashScreen": {
+      "backgroundColor": "#000000" ,
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    },
+    "LocalNotifications": {
+      "smallIcon": "small_notification_icon"
+    }
+  }
+}

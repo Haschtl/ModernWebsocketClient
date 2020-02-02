@@ -1,5 +1,7 @@
 {
   "name": "WebsocketClient",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "react"
 }

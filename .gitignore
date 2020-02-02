@@ -10,6 +10,8 @@
 
 # production
 /build
+/android
+/electron
 
 # misc
 .DS_Store
@@ -18,6 +20,8 @@
 .env.test.local
 .env.production.local
 .vscode
+.firebaserc
+/.firebase
 
 npm-debug.log*
 yarn-debug.log*
