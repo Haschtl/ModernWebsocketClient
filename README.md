@@ -1,3 +1,5 @@
+![](C:\Users\hasch\Apps\WebsocketClient\public\assets\icon\favicon.png)
+
 # OpenSource Websocket Client v1.0
 
 ## Description
@@ -10,7 +12,7 @@
 
 - Download the latest version for your system in the Release-Section
 - Soon there will be an Android-App in the PlayStore
-- This app is also hosted on firebase: [https://modern-websocket-client.web.app](WebsocketClient WebApp)
+- This app is also hosted on firebase: [WebsocketClient WebApp](https://modern-websocket-client.web.app)
 
 ## Setup this project
 
@@ -56,10 +58,16 @@ After this you need to open Android Studio and build the apk
 ### Build for Windows, Linux, Mac with electron
 **Prerequirements**: You need electron installed
 
-You need to add Electron with capacitor only once:
+You need to add Electron with capacitor only once :
 
 `ionic capacitor add electron`
-
+Then edit the 'index.js' file in the "electron" folder
+```
+let useSplashScreen = false;
+```
+Then edit the'package.json' file in your root-directory:
+`"homepage": ".",`
+This is [somehow needed](https://github.com/ionic-team/capacitor/issues/639) 
 Copy your build to electron: `npx cap copy`
 
 **Important: Change <base href="/"/> -> <base href="./"/> in electron/app/index.html**

@@ -2,6 +2,7 @@
   "name": "websocket_client",
   "version": "0.0.1",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@capacitor/android": "^1.4.0",
     "@capacitor/core": "1.4.0",
@@ -59,7 +60,7 @@
       "last 1 safari version"
     ]
   },
-  "description": "An Ionic project",
+  "description": "Modern OpenSource WebSocket Client",
   "devDependencies": {
     "@capacitor/cli": "1.4.0"
   }
