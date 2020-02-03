@@ -35,10 +35,17 @@ The output will be in the "build" folder.
 
 
 
+
+
 ### Build for the Web
 The build-process for the web is already finished. You just need the "build" folder.
 
 Go into the "build" folder and execute `serve -p 8050` to run the App at port 8050.
+
+
+
+
+
 
 ### Build for Android
 **Prerequirements**: You need to have Android Studio installed
@@ -54,6 +61,11 @@ Then you can copy the build to AndroidStudio
 After this you need to open Android Studio and build the apk
 
 `npx cap open android`
+
+
+
+
+
 
 ### Build for Windows, Linux, Mac with electron
 **Prerequirements**: You need electron installed
@@ -83,6 +95,9 @@ electron-packager . "WebSocketClient" --all --overwrite
 ```
 Exeutables will be in electron/capacitor-app-*/
 
+
+
+
 ### Upload to firebase
 **Prerequirements**: You need a firebase-account and firebase installed and configured
 
@@ -91,12 +106,21 @@ Initialize firebase for this App once: `firebase init` and follow the guide.
 Then you can upload you build with
 `firebase deploy`
 
+
+
+
+
+
+
 ### Extra: Build electron-windows-app (not working)
 electron-windows-store `
     --input-directory PATHTOAPP\electron `
     --output-directory PATHTOAPP\WindowsStore `
     --package-version 1.0.0.0 `
     --package-name WebsocketClient
+
+
+
 
 
 ## Example systemd-service
