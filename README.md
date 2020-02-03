@@ -1,4 +1,4 @@
-![](C:\Users\hasch\Apps\WebsocketClient\public\assets\icon\favicon.png)
+![](https://github.com/Haschtl/ModernWebsocketClient/blob/master/public/assets/icon/favicon.png)
 
 # OpenSource Websocket Client v1.0
 
