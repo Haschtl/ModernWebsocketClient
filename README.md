@@ -10,8 +10,8 @@
 
 ## Installation
 
-- Download the latest version for your system in the Release-Section
-- Soon there will be an Android-App in the PlayStore
+- Download the latest version for your system in the [Release-Section](https://github.com/Haschtl/ModernWebsocketClient/releases)
+- Soon there will be an Android-App in the [PlayStore](http://play.google.com/store/search?q=Modern+Websocket+Client&c=apps)
 - This app is also hosted on firebase: [WebsocketClient WebApp](https://modern-websocket-client.web.app)
 
 ## Setup this project
