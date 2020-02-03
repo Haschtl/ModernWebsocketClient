@@ -62,7 +62,12 @@ After this you need to open Android Studio and build the apk
 
 `npx cap open android`
 
-
+You may want to edit the /App/stc/main/AndroidManifest.xml and add these two lines
+```
+android:usesCleartextTraffic="true"
+android:hardwareAccelerated="true"
+```
+in the 'application' tag
 
 
 
