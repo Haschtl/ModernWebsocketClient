@@ -4,7 +4,7 @@
 
 ## Description
 
-- This is an **OpenSource **project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
+- This is an **OpenSource** project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
 - This is a simple WebsocketClient-Application with Input-Completition and some small nice features. You can use SecureWebsockets (SSL) or normal Websockets.
 - Currently, you can only connect to one server at a time.
 
