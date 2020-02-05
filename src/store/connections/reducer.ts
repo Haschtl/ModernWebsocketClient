@@ -63,7 +63,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon = state.connections
       newCon[state.connections.indexOf(action.payload)] = action.payload
       date = Date.now()
-      Msg = {member: {id: -2}, date:date, text: "Connected"} as Message;
+      Msg = { member: { id: -2 }, date: date, text: "Connected" } as Message;
       newCon[state.connections.indexOf(action.payload)].messages = [...action.payload.messages, Msg]
       return {
         ...state,
@@ -81,7 +81,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon = state.connections
       newCon[state.connections.indexOf(curCon)] = action.payload
       date = Date.now()
-      Msg = {member: {id: -2}, date:date, text: "Failure"} as Message;
+      Msg = { member: { id: -2 }, date: date, text: "Failure" } as Message;
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
       return {
         ...state,
@@ -106,7 +106,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].connected = false
       newCon[state.connections.indexOf(curCon)].ws = undefined
       date = Date.now()
-      Msg = {member: {id: -2}, date:date, text: "Disconnected"} as Message;
+      Msg = { member: { id: -2 }, date: date, text: "Disconnected" } as Message;
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
       return {
         ...state,
@@ -131,16 +131,23 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         console.error('Failed')
         return state;
       }
+
+      if (action.payload.password !== '') {
+        const message = crypto.decryptStr(action.meta, action.payload.password)
+        if (message !== undefined && message !== false) {
+          action.meta = message
+        }
+      }
       newCon = state.connections
       const recv: any = action.meta
       date = Date.now()
-      Msg = {member: {id: curCon.id, name: curCon.name}, date:date, text: recv} as Message;
+      Msg = { member: { id: curCon.id, name: curCon.name }, date: date, text: recv } as Message;
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
-        return {
-          ...state,
-          connections: [...newCon],
-        }
-    
+      return {
+        ...state,
+        connections: [...newCon],
+      }
+
     case getType(connections.removeCommand):
       curCon = action.payload
       if (curCon === undefined) {
@@ -151,7 +158,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       // if (curCon.ws !== undefined) {
       //   curCon.ws.close()
       // }
-      curCon.commands.splice(curCon.commands.indexOf(action.meta))
+      curCon.commands.splice(curCon.commands.indexOf(action.meta),1)
       newCon[state.connections.indexOf(curCon)] = curCon
       return {
         ...state,
@@ -193,7 +200,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         connections: [...newCon],
       }
     case getType(connections.sendWebsocket):
-      if(action.meta === '') {return state}
+      if (action.meta === '') { return state }
       curCon = action.payload
       if (curCon === undefined) {
         console.error('Failed')
@@ -203,26 +210,26 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       if (curCon.ws !== undefined) {
         try {
           var message = action.meta;
+          const date = Date.now()
+          const Msg = { member: { id: -1, name: 'Me' }, date: date, text: message } as Message;
+
+          var found = false;
+          for (var c in curCon.commands) {
+            if (curCon.commands[c].value === message) {
+              found = true;
+              curCon.commands[c].num += 1
+            }
+          }
+          if (found === false) {
+            curCon.commands = [...curCon.commands, { value: message, num: 1 } as Command]
+          }
+          console.log(curCon.commands)
+          curCon.messages = [...curCon.messages, Msg]
           if (curCon.password !== "") {
             message = crypto.encryptStr(action.meta, curCon.password)
           }
           curCon.ws.send(message)
-          const date = Date.now()
-          const Msg = {member: {id: -1, name: 'Me'}, date: date, text: message} as Message;
-          
-          var found=false;
-          for(var c in curCon.commands){
-            if(curCon.commands[c].value === message){
-              found=true;
-              curCon.commands[c].num += 1
-            }
-          }
-          if(found===false){
-            curCon.commands =  [...curCon.commands ,{value: message, num: 1} as Command]
-          }
-          console.log(curCon.commands)
-          curCon.messages = [...curCon.messages, Msg]
-          newCon[newCon.indexOf(action.payload)]=curCon
+          newCon[newCon.indexOf(action.payload)] = curCon
           return {
             ...state,
             connections: [...newCon],

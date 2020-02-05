@@ -5,7 +5,6 @@ import { Middleware } from 'redux';
 import * as cogoToast from '../../components/CustomToasts';
 import i18n from '../../i18n';
 import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
-import * as myCrypto from '../encryption';
 
 const { Storage, Filesystem } = Plugins;
 var crypto = require('crypto');
@@ -170,16 +169,6 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     };
 
     ws.onmessage = (evt: any) => {
-      if(action.payload.password !== ''){
-        const message = myCrypto.decryptStr(evt.data, action.payload.password)
-        if (message !== undefined) {
-          next(connections.newDataIncoming(action.payload, evt.data));
-        }
-        else {
-          cogoToast.warn(i18n.t('Password not needed'))
-          next(connections.newDataIncoming(action.payload, evt.data));
-        }
-      }
       next(connections.newDataIncoming(action.payload, evt.data));
     }
 

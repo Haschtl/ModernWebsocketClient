@@ -160,7 +160,15 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
 
   render() {
     if (this.props.connection === undefined) {
-      return undefined;
+      return (<IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref={'/connect'} />
+          </IonButtons>
+          <IonTitle><Trans>No connection</Trans></IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      );
     }
     const connection = this.props.connection;
 

@@ -6,6 +6,7 @@ import { Message, Connection } from '../../store/connections/types'
 import {
   IonItemDivider
 } from '@ionic/react';
+import JSONTree from 'react-json-tree'
 
 type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> &
 {
@@ -44,6 +45,13 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       datestring = new Date(date).toLocaleDateString()
 
     }
+    var json=undefined
+    try{
+    json = JSON.parse(text)
+    }
+    catch{
+      
+    }
     return (<>
       {this.props.idx % 5 === 0 &&
         <IonItemDivider sticky style={{textAlign: 'center'}}>
@@ -52,14 +60,13 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       }
       <li className={className} key={'msg' + this.props.idx}>
         <div className="Message-content">
-          {!messageFromApp ?
-            // <><div className="username">
-            //   {datestring}
-            // </div>
-            <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
-            // </>
-            :
+          {messageFromApp ?
             <div className="text">{text} @{timestring}</div>
+            :
+            json === undefined ?
+            <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+            :
+            <JSONTree data={json} />
           }
         </div>
       </li></>

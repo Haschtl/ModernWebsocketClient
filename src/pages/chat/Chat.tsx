@@ -15,7 +15,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { actions, RootState, selectors } from '../../store';
-import { Command, Connection } from '../../store/connections/types';
+import { Command, Connection, Message } from '../../store/connections/types';
 import ChatList from '../../components/chat/ChatList'
 import { } from '@ionic/react';
 
@@ -36,6 +36,7 @@ type State = {
   textinput: string;
   showPopover: boolean;
   event: React.MouseEvent | undefined;
+  history_location: number;
   // connections: Connection[] | undefined;
 };
 
@@ -45,6 +46,7 @@ class Chat extends Component<Props & WithTranslation, State> {
     textinput: '',
     showPopover: false,
     event: undefined,
+    history_location: -1
     // connections: undefined,
   };
   onSubmit(e: React.FormEvent) {
@@ -53,7 +55,7 @@ class Chat extends Component<Props & WithTranslation, State> {
   }
   onSubmit2() {
     if (this.props.connection === undefined) { return }
-    this.setState({ textinput: "" });
+    this.setState({ textinput: "", history_location: -1 });
     this.props.sendWebsocket(this.props.connection, this.state.textinput);
     // if(this.props.active===undefined){return}
     this.props.saveConnections(this.props.connections, this.props.connection)
@@ -72,16 +74,37 @@ class Chat extends Component<Props & WithTranslation, State> {
       b.num - a.num
     )).slice(0, count).reverse()
   }
-  showMenu(e:React.MouseEvent) {
+  showMenu(e: React.MouseEvent) {
     e.persist()
-    this.setState({ ...this.state, showPopover: !this.state.showPopover, event:e })
+    this.setState({ ...this.state, showPopover: !this.state.showPopover, event: e })
   }
-  connect(e:React.MouseEvent) {
-    if(this.props.connection===undefined){return}
+  connect(e: React.MouseEvent) {
+    if (this.props.connection === undefined) { return }
     e.preventDefault()
     this.props.establishConnection(this.props.connection)
   }
-
+  onKeyDown(e: React.KeyboardEvent) {
+    console.log(e.keyCode)
+    if (this.props.connection === undefined) { return }
+    var lastInputs = this.props.connection.messages.filter((value: Message) => {
+      if (value.member.id === -1) {
+        return value
+      }
+      return undefined
+    }).reverse()
+    if (e.keyCode === 38) {
+      if (this.state.history_location < lastInputs.length-1) {
+        this.setState({ textinput: lastInputs[this.state.history_location + 1].text, history_location: this.state.history_location + 1 });
+      }
+    }
+    else if (e.keyCode === 40) {
+      if (this.state.history_location >= 1) {
+        this.setState({ textinput: lastInputs[this.state.history_location - 1].text, history_location: this.state.history_location - 1 });
+      } else {
+        this.setState({ textinput: "", history_location: -1 });
+      }
+    }
+  }
   render() {
 
     var text = this.state.textinput
@@ -111,10 +134,10 @@ class Chat extends Component<Props & WithTranslation, State> {
               >
                 <IonButton expand="full" routerLink={'/connect/' + this.props.connection.id}><Trans>Settings</Trans></IonButton>
                 <IonButton expand="full" onClick={() => { this.clearMessages() }}><Trans>Clear</Trans></IonButton>
-                {this.props.connection.connected === false?
-                <IonButton color="secondary" expand="full" onClick={() => (this.props.establishConnection(connection))}><Trans>Connect</Trans></IonButton>
-                :
-                <IonButton color="error" expand="full" onClick={() => (this.props.quitConnection(connection))}><Trans>Disconnect</Trans></IonButton>
+                {this.props.connection.connected === false ?
+                  <IonButton color="secondary" expand="full" onClick={() => (this.props.establishConnection(connection))}><Trans>Connect</Trans></IonButton>
+                  :
+                  <IonButton color="error" expand="full" onClick={() => (this.props.quitConnection(connection))}><Trans>Disconnect</Trans></IonButton>
                 }
               </IonPopover>
               <IonButton onClick={(e) => this.showMenu(e)}><Trans><IonIcon icon={menu}></IonIcon></Trans></IonButton>
@@ -127,7 +150,7 @@ class Chat extends Component<Props & WithTranslation, State> {
             messages={this.props.connection.messages}
           ></ChatList>
         </IonContent>
-        <IonFooter className="Footer" style={{ "backgroundColor": "transparent" }}>
+        <IonFooter className="Footer" style={{ "color": "transparent" }} >
           {this.props.connection.connected === true ?
             <>
               {(this.state.textinput.length > 0 && commands.length > 0) &&
@@ -141,17 +164,18 @@ class Chat extends Component<Props & WithTranslation, State> {
                   ))}
                 </IonList>
               }
-              <div className="Input">
-                <form onSubmit={e => this.onSubmit(e)}>
-                  <input
-                    onChange={e => this.onChange(e)}
-                    value={text}
-                    type="text"
-                    placeholder={this.props.t("Enter your message and press ENTER")}
-                  />
-                  <IonButton onClick={e => this.onSubmit2()}><IonIcon icon={send}></IonIcon></IonButton>
-                </form>
-              </div>
+              <form onSubmit={e => this.onSubmit(e)}>
+                <input
+                  onKeyDown={(e) => this.onKeyDown(e)}
+                  onChange={e => this.onChange(e)}
+                  value={text}
+                  type="text"
+                  placeholder={this.props.t("Enter your message and press ENTER")
+
+                  }
+                />
+                <IonButton onClick={e => this.onSubmit2()}><IonIcon icon={send}></IonIcon></IonButton>
+              </form>
             </>
             :
             <IonButton expand="full" onClick={(e) => (this.connect(e))}><Trans>Connect</Trans></IonButton>
