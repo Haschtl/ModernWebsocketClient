@@ -10,7 +10,8 @@ export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.2',
+  version: '1.3',
+  protocolPresets: [],
 }
 
 export default (state = connectionDefaultState, action: ActionType<typeof connections>): ConnectionState => {
@@ -26,6 +27,11 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         ...state,
         connections: action.payload
       }
+      case getType(connections.fetchProtocols.success):
+        return {
+          ...state,
+          protocolPresets: action.payload
+        }
     case getType(connections.fetchConnections.failure):
       return {
         ...state,

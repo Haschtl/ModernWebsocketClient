@@ -75,6 +75,7 @@ class App extends Component<Props, AppState> {
   componentDidMount() {
     this.props.loadTheme()
     this.props.loadConnections()
+    this.props.loadProtocolPresets()
   }
 
   toggleBigscreen(e: CustomEvent) {
@@ -114,6 +115,7 @@ class App extends Component<Props, AppState> {
 const mapDispatchToProps = {
   loadTheme: () => actions.connection.loadTheme(),
   loadConnections: () => actions.connection.loadConnections(),
+  loadProtocolPresets: () => actions.connection.loadProtocolPresets(),
 };
 
 const mapStateToProps = (state: RootState) => ({

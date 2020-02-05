@@ -1,0 +1,66 @@
+[
+    "{'getLatest': true}",
+    "{'getSignalList': true}",
+    "{'getEventList': true}",
+    "{'getPluginList': true}",
+    "{'unsubscribeAll': true}",
+    "{'subscribeAll': true}",
+    "{'getSession': true}",
+  
+  
+    "{'plugin': {'Generator':{'start':true}}}",
+    "{'plugin': {'Generator':{'start':false}}}",
+    "{'plugin': {'Generator':{'autostart':true}}}",
+    "{'plugin': {'Generator':{'samplerate':5}}}",
+    "{'plugin': {'Generator':{'setAmplitude()':[5]}}}",
+  
+  
+    "{'logger': {'resize':500}}",
+    "{'logger': {'export':['filename','json']}}",
+    "{'logger': {'export':['filename','xlsx']}}",
+    "{'logger': {'export':['filename','csv']}}",
+    "{'logger': {'info':true}}",
+    "{'logger': {'reboot':true}}",
+    "{'logger': {'backup':{'now':true}}}",
+    "{'logger': {'backup':{'resample':0}}}",
+    "{'logger': {'backup':{'interval':1}}}",
+    "{'logger': {'backup':{'active':true}}}",
+    "{'logger': {'backup':{'loadOnOpen':true}}}",
+    "{'logger': {'backup':{'autoIfFull':true}}}",
+    "{'logger': {'backup':{'autoOnClose':true}}}",
+    "{'logger': {'backup':{'clear':true}}}",
+    "{'logger': {'postgresql':{'active':true}}}",
+    "{'logger': {'tcp':{'active':true}}}",
+    "{'logger': {'telegram':{'active':true}}}",
+    "{'logger': {'tcp':{'port':5050}}}",
+    "{'logger': {'global':{'samplerate':10}}}",
+    "{'logger': {'clear':'all'}}",
+    "{'logger': {'clear':'events'}}",
+    "{'logger': {'clear':['Geneator.Square']}}",
+  
+  
+    "{'userAction': 'myCustomAction'}",
+  
+  
+    "{'automation': {'setAction':{'name':'Action1','script':'print('Hello'),'active':true,'listenID':['listener1']}}}",
+    "{'automation': {'setEvent:{'name':'Event1','cond':'Generator.Square>=1','text':'Big square','sname':'Square','dname':'Generator','trigger':'rising','priority':1}}}",
+    "{'automation': {'testAction':'Action1'}}",
+    "{'automation': {'testEvent':'Event1'}}",
+    "{'automation': {'removeAction':'Action1'}}",
+    "{'automation': {'removeEvent':'Event1'}}",
+    "{'automation': {'active':{'events':[],'actions':[]}}}",
+    "{'automation': {'reset':true}}",
+  
+  
+    "{'getEvent': ['Generator.Square']}",
+    "{'remove': ['Generator.Square']}",
+    "{'subscribe': ['signal','Generator.Square']}",
+    "{'subscribe': ['device','Generator']}",
+    "{'unsubscribe': ['signal','Generator.Square']}",
+    "{'unsubscribe': ['device','Generator']}",
+    "{'getSignal': ['Generator.Square']}",
+    "{'getSignal': 'all'}",
+    "{'getSignal': {'dname':'Generator,'sname':'Square','xmin':0,'xmax':50000000,'database':true,'maxN':100}}",
+    "{'event': {'text':'Example','dname':'Device','sname':'Test', 'priority':2}}",
+    "{'y':[1],'sname':['Test'],'dname':'Device','unit':'Bananas'}"
+    ]

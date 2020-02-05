@@ -23,7 +23,8 @@ export interface ConnectionState {
   config?: any;
   theme: Theme,
   tutorials: Tutorial[],
-  version: string
+  version: string,
+  protocolPresets: [string, Command[]][]
 }
 
 export type Theme= 'dark-theme' | 'light-theme' | 'blackwhite-theme' | 'oled-theme' | 'green-theme' | 'medium-theme'

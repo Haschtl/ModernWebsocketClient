@@ -1,0 +1,9 @@
+[
+    "root:login(COOKIE,app,5)",
+    "root:logout()",
+    "root:aliases",
+    "root:allAliases",
+    "debug:users",
+    "debug:USERNAME",
+    "debug:USERNAME.ALIAS"
+]

@@ -1,12 +1,13 @@
 import * as connections from './actions';
-import { Connection, ConnectionState } from './types';
+import { Connection, ConnectionState, Command } from './types';
 import { ActionType, getType } from 'typesafe-actions';
 import { Middleware } from 'redux';
 import * as cogoToast from '../../components/CustomToasts';
 import i18n from '../../i18n';
 import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
-
+// import YAML from 'yaml'
 const { Storage, Filesystem } = Plugins;
+var yaml = require('js-yaml');
 var crypto = require('crypto');
 
 
@@ -14,10 +15,10 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
   next(action);
 
   if (action.type === getType(connections.importConnections)) {
-    const path = 'External/RTOC_config.json'
+    const path = 'External/ModernWebsocketClientConfig.json'
     try {
       const data = await Filesystem.readFile({
-        path: 'RTOC_config.json',
+        path: 'ModernWebsocketClientConfig.json',
         directory: FilesystemDirectory.ExternalStorage,
         encoding: FilesystemEncoding.UTF8
       });
@@ -111,13 +112,56 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     }
   }
 
-  else if (action.type === getType(connections.updateConnections)) {
+  else if (action.type === getType(connections.loadProtocolPresets)) {
     next(connections.fetchConnections.request());
+    var r1: Command[] = []
+    var r2: Command[] = []
+    var r3: Command[] = []
+
     try {
-      console.log('Loading connections from file')
-      const response = await fetch('/assets/data/connections.json');
-      const connectionList: Connection[] = await response.json();
-      next(connections.fetchConnections.success(connectionList));
+      console.log('Loading protocol presets from different files')
+      try{
+      const response1 = await fetch('/assets/protocols/RTOC.json');
+      const res1: string[] = await response1.json();
+      r1 = res1.map((value:string, idx:number)=>{
+        return {value:value, num:0} as Command
+      })
+      }
+      catch{console.error('Cannot read /assets/protocols/RTOC.json')}
+
+      try{
+      const response2 = await fetch('/assets/protocols/CresRoot.json');
+      const res2: string[] = await response2.json();
+      r2 = res2.map((value:string, idx:number)=>{
+        return {value:value, num:0} as Command
+      })}
+      catch{console.error('Cannot read /assets/protocols/CresRoot.json')}
+      
+      try{
+      const response3 = await fetch('/assets/protocols/CresDeneb.yml');
+      var res3: string = await response3.text()
+      // const r3 = YAML.parseCST(res3).
+      // var res3split = res3.split('\n')
+      // for(var i=1;i>res3split.length;i++){
+      //   if(res3split[i].indexOf(':')===-1){
+      //     res3split[i].split(')').join('')
+      //   }
+      // }
+      // res3 = res3split.join('\n')
+      var obj = yaml.load(res3);
+      // console.log(obj)
+      r3 = recursiveYaml(obj).map((value:string, idx:number)=>{
+        return {value:value, num:0} as Command
+      })
+      // console.log(r3)
+      // this code if you want to save
+      // fs.writeFileSync(outputfile, JSON.stringify(obj, null, 2));
+      }catch (e){console.error(e); console.error('Cannot read /assets/protocols/CresDeneb.yml')}
+      
+      const deneb = ['Crescience Deneb', [...r2,...r3]] as [string, Command[]]
+      const rtoc = ['RTOC', [...r1]] as [string, Command[]]
+      next(connections.fetchProtocols.success([deneb, rtoc]));
+    
     } catch (e) {
       console.error(e)
       next(connections.fetchConnections.failure(e));
@@ -176,3 +220,39 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     return
   }
 };
+
+function recursiveYaml(obj:Object, initialPath:string='') {
+  var r: string[] = []
+  var updatedPath: string = initialPath;
+  for(var [key, value] of Object.entries(obj)){
+    // console.log(key)
+    // console.log(value)
+    if(initialPath.length===0){
+      updatedPath = initialPath+key
+    }
+    else{
+      updatedPath = initialPath+':'+key
+    }
+
+    if(typeof value === 'object' && value !== null && value !== undefined ) {
+      var subr = recursiveYaml(value, updatedPath)
+      r = [...subr,...r]
+    }
+    else{
+      // return([initialPath+':'+value])
+      if(typeof value === 'string'){
+        if(value.indexOf('(')===-1){
+          r.push(updatedPath+' = '+value)
+        }
+        else{
+          r.push(updatedPath+value)
+        }
+      }
+      else{
+        r.push(updatedPath+' = '+value)
+      }
+    }
+  }
+  // console.log(r)
+  return r
+}

@@ -51,8 +51,8 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       strsplit2 = [strsplit2[0],strsplit2.slice(1,strsplit2.length).join(':')]
       
       if (strsplit2.length === 2) {
-        console.log(strsplit2)
-        console.log(strsplit2[1].split('='))
+        // console.log(strsplit2)
+        // console.log(strsplit2[1].split('='))
         if(strsplit2[1].indexOf('(')>=0){
           return { "target": strsplit2[0], 
           "call": strsplit2[1].slice(0,strsplit2[1].indexOf('(')),
@@ -102,10 +102,10 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     catch{
       try {
         json = this.cres2json(text)
-        console.log(json)
+        // console.log(json)
       }
       catch (e){
-        console.log(e)
+        // console.log(e)
        }
     }}
     return (<>

@@ -7,9 +7,11 @@ export const fetchConnections = createAsyncAction(
   'connect/FETCH_FAILURE'
 )<void, Connection[], string>();
 
-export const updateConnections = createAction('connect/UPDATE_CONNECTIONS', resolve =>
-  () => resolve()
-);
+export const fetchProtocols = createAsyncAction(
+  'connect/FETCH_PRO_REQUEST',
+  'connect/FETCH_PRO_SUCCESS',
+  'connect/FETCH_PRO_FAILURE'
+)<void, [string, Command[]][], string>();
 
 export const saveConnections = createAction('connect/SAVE_CONNECTIONS', resolve =>
   (connections: Connection[], active?: Connection) => resolve(connections, active)
@@ -17,6 +19,10 @@ export const saveConnections = createAction('connect/SAVE_CONNECTIONS', resolve 
 
 export const editConnection = createAction('connect/EDIT_CONNECTION', resolve =>
   (connection: Connection) => resolve(connection)
+);
+
+export const loadProtocolPresets = createAction('connect/LOAD_PROTOCOL_PRESETS', resolve => 
+  () => resolve()
 );
 
 export const removeCommand = createAction('connect/REMOVE_COMMAND', resolve =>

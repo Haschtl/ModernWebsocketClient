@@ -1,0 +1,173 @@
+deneb:
+  type: deneb
+  serial: xxxyyyzzz
+  tag: mytag,another tag
+  time:
+    actual-time:  27d:10h:35m:15s
+    ntp-enabled: true
+    ntp-server:  time.cre.science
+    timezone: -6
+    get-time: ()
+  eeprom:
+    state:  initialized and ready
+    size: 1024
+    read: (byte)
+    write: (byte,byte)
+    commit: ()
+    load: ()
+    save: ()
+    erase: ()
+  wifi:
+    state: "connected to XY"
+    online: true
+    hostname: deneb
+    incognito:
+      enabled: false
+      delay:  600
+    access-point:
+      ssid: deneb xxxyyyzzz
+      key:  zzzyyyxxx
+      ip: 192.168.4.1
+    client:
+      networks: testnetz1, testnetz2
+      ssid: Test-Router
+      key: testrouterkey
+      persistent: true
+      ip: 192.168.16.2
+      scan: ()
+      connect: ()
+      disconnect: ()
+  websocket:
+    remote-server:
+      connected: true
+      authenticated: true
+      alias: ""
+      domain: control.cre.science
+      port: 81
+      reconnect-interval: 5000
+      multicast:
+        clients: root,app-1
+        period: 10
+        # add-parameter()
+        # remove-parameter()
+        subscribe: ()
+        unsubscribe: ()
+
+      connect: ()
+      disconnect: ()
+    local-server:
+      alias: deneb-1
+      port: 81
+      clients: 2
+      broadcast-period: 0.1
+  user:
+    name: simon92
+    password: 19pass92
+  firmware:
+    initialized: true
+    automatic-updates-enabled:  true
+    version: 1.0
+    target-version: latest
+    update-server:  update.cre.science
+    polling-period:  3600
+    polling-timeout:  30
+    check-update: ()
+    perform-update: ()
+
+  system:
+    current-errors: 1024,3154,engine1:8754
+    debugging-enabled:  false
+    cpu-usage:
+    heap-usage:
+    stack-size:
+    parameter-dump: ()
+    clear-errors: ()
+    reboot: ()
+
+  i2c:
+    arbitration:
+      collision-test-duration: 10
+      max-slaves: 10
+      address-offset: 10
+      max-tries:  50
+      table: (11, 12, 13, 15)
+      check-address: (addr)
+      perform: ()
+    slaves: 4
+    frequency:  100000
+    min-frequency: 10000
+    successful-read-transmissions:  48971
+    failed-read-transmission: 0
+    successful-write-transmissions: 746
+    failed-write-tranmissions:  0
+    failure-rate: 0.0
+    reset-on-errors:  true
+    confirm-writes: false
+    confirm-reads: false
+    reset: ()
+  slaves:
+
+
+
+
+  engineX:
+    type: flux-engine
+    serial: xxyyzz
+    led1:
+      digital:  0.
+      analog: 0.
+      id: 1
+      spectrum: 660nm
+      current:  713.4
+      voltage:  21.7
+    led2:
+      digital:  0.
+      analog: 0.
+      id: 7
+      spectrum: 620nm
+      current:  569.7
+      voltage:  16.7
+    led3:
+      digital:  0.
+      analog: 0.
+      id: 2
+      spectrum: 445nm
+      current:  713.4
+      voltage:  18.1
+    led4:
+      digital:  0.
+      analog: 0.
+      id: 11
+      spectrum: 720nm
+      current:  569.7
+      voltage:  6.3
+
+    eeprom:
+      load: ()
+      save: ()
+    led-temperature:  49.7
+    driver-temperature: 67.8
+    mcu-temperature:  56.7
+    dithering:
+      enabled:  true
+      resolution: 3
+    temperature-control:
+      enabled:  true
+      temperature-limit:
+        led:  70
+        driver: 90
+        mcu:  75
+      shutdown-temperature:
+        led:  75
+        driver: 100
+        mcu:  80
+      shutdown-hysteresis:  5
+    calibration:
+      led-temperature-factor: 1.12
+      led-temperature-offset: 0.57
+      driver-temperature-factor:  1.15
+      driver-temperature-offset:  -0.23
+      mcu-temperature-factor: 24.1
+      mcu-temperature-offset: -641.3
+    i2c:
+      address:  23
