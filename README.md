@@ -7,7 +7,7 @@
 
 - This is an **OpenSource** project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
 - This is a simple WebsocketClient-Application with Input-Completition and some small nice features. You can use SecureWebsockets (SSL) or normal Websockets.
-- Currently, you can only connect to one server at a time.
+- Connect to multiple servers at the same time.
 
 ## Example Ionic4 React project
 This app can be seen as an Ionic4 React example, that can be deployed on all available platforms with the following features:
