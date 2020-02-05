@@ -94,15 +94,21 @@ class AboutPage extends PureComponent<Props & WithTranslation> {
           <IonButton expand="full" fill="solid" color="secondary" onClick={this.share}>
             <Trans>Share</Trans>
           </IonButton>
-          <IonButton expand="full" fill="solid" color="secondary" onClick={() => Browser.open({ url: 'https://haschtl.github.io/ModernWebsocketClient/' })}>
+          <IonButton expand="full" fill="solid" color="danger" onClick={() => Browser.open({ url: 'https://www.paypal.com/donate/?token=ECCLajboRrJcPTW0AvKLtiw114LrXmBEpAy0y3AWQEZfz0u2ZXFbN63lxjFceNOSqu2YQW&country.x=DE&locale.x=DE' })}>
+            <Trans>Donate</Trans>
+          </IonButton>
+          <IonButton expand="full" fill="solid" color="tertiary" onClick={() => Browser.open({ url: 'https://haschtl.github.io/ModernWebsocketClient/' })}>
             <Trans>Github Page</Trans>
           </IonButton>
-          <IonButton expand="full" fill="solid" color="secondary" onClick={() => this.exportConnections()}>
+          <IonButton expand="full" fill="solid" color="tertiary" onClick={() => Browser.open({ url: 'https://haschtl.github.io/RealTimeOpenControl/' })}>
+            <Trans>Compatible Tools</Trans>
+          </IonButton>      
+          <IonButton expand="full" fill="solid" color="primary" onClick={() => this.exportConnections()}>
             <Trans>Export App settings</Trans>
           </IonButton>
-          <IonButton expand="full" fill="solid" color="secondary" onClick={() => this.importConnections()}>
+          <IonButton expand="full" fill="solid" color="primary" onClick={() => this.importConnections()}>
             <Trans>Import App settings</Trans>
-          </IonButton>        
+          </IonButton>  
           </IonContent>
       </IonPage>
     );

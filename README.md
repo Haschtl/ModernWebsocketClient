@@ -11,6 +11,7 @@
 - Nice JSON-Data formatting
 - Custom AES-Ecryption
 - Communication-Protocoll
+- Protocoll Presets - Till now hardcoded available: [Crescience Deneb](https://cre.science) and [RTOC](https://haschtl.github.io/RealTimeOpenControl/)
 
 ## Example Ionic4 React project
 This app can be seen as an Ionic4 React example, that can be deployed on all available platforms with the following features:

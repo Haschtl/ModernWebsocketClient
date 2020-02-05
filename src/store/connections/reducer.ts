@@ -41,7 +41,8 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       action.payload.id = newId
 
       state.connections.push(action.payload)
-      return state;
+      return {...state,
+        connections: [...state.connections]};;
     case getType(connections.removeConnection):
       con = state.connections.find(e => e.id === action.payload.id);
       if (con === undefined) {
@@ -49,7 +50,8 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         return state;
       }
       state.connections.splice(state.connections.indexOf(con), 1)
-      return state;
+      return {...state,
+        connections: [...state.connections]};
     case getType(connections.editConnection):
       con = state.connections.find(e => e.id === action.payload.id);
       if (con === undefined) {
