@@ -59,7 +59,7 @@ export const websocketConnection = createAsyncAction(
   'connect/WS_REQUEST',
   'connect/WS_SUCCESS',
   'connect/WS_FAILURE',
-)<Connection, Connection, Connection>();
+)<Connection, Connection, [Connection,any]>();
 
 export const newDataIncoming = createAction('connect/NEW_DATA_INCOMING', resolve =>
   (con: Connection, data: string) => resolve(con, data)
@@ -76,7 +76,9 @@ export const clearMessages = createAction('connect/CLEAR_MESSAGES', resolve =>
 export const setState2 = createAction('connect/SET_STATE2', resolve =>
   (data: Object) => resolve(data)
 );
-
+export const setCurrentChat = createAction('connect/SET_CURRENT_CHAT', resolve =>
+  (data: number) => resolve(data)
+);
 export const clearReducerHistory = createAction('connect/CLEAR_REDUCER_HISTORY', resolve =>
   () => resolve()
 );

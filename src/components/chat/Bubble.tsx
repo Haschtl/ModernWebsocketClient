@@ -37,6 +37,9 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     const className = messageFromMe ?
       "Messages-message currentMember" : messageFromApp ?
         "Messages-message appMember" : "Messages-message";
+    const className2 = messageFromMe ?
+      "Messages-message CurrentJsonMember" : messageFromApp ?
+        "Messages-message appMember" : "Messages-message JsonMember";
     var datestring = ''
     var timestring = ''
     if (date !== undefined) {
@@ -55,7 +58,7 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     return (<>
       {this.props.idx % 5 === 0 &&
         <IonItemDivider sticky style={{textAlign: 'center'}}>
-          <div className="Message-time">{timestring}&nbsp;&nbsp;{datestring}</div>
+          {timestring}&nbsp;&nbsp;{datestring}
         </IonItemDivider>
       }
       <li className={className} key={'msg' + this.props.idx}>
@@ -66,7 +69,10 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
             json === undefined ?
             <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
             :
-            <JSONTree data={json} />
+            <JSONTree data={json} 
+            hideRoot={true} 
+            theme={{tree: (style:any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }),}}
+          />
           }
         </div>
       </li></>

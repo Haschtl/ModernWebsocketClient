@@ -17,6 +17,7 @@ export interface Connection {
 
 export interface ConnectionState {
   connections: Connection[];
+  currentChat?: number;
   history?: string;
   config?: any;
   theme: Theme,

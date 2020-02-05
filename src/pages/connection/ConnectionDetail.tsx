@@ -282,7 +282,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
           </IonCard>
         </IonContent>
 
-        <IonFooter>
+        <IonFooter className="Footer" >
           {!this.state.isEdited ?
             <IonGrid>
               <IonRow>

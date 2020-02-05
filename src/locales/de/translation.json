@@ -9,6 +9,9 @@
     "Offline": "Offline",
     "Connect": "Verbinden",
     "Disconnect": "Trennen",
+    "Disconnected": "Verbindung getrennt",
+    "Connected": "Verbindung hergestellt",
+    "Message from ":"Nachricht von ",
     "Remove": "Entfernen",
     "Discard": "Abbrechen",
     "Cancel": "Abbrechen",
@@ -19,6 +22,7 @@
     "Port": "Port",
     "Menu": "Menü",
     "Clear": "Leeren",
+    "Failure": "Fehler",
     "Commandos": "Befehle",
     "Connections": "Verbindungen",
     "Black and White": "Schwarz-Weiss",
@@ -64,5 +68,6 @@
     "This is a OpenSource Websocket Client App with SSL support": "Dies ist eine OpenSource-Websocket-Client-Anwendung mit SSL-Unterstützung.",
     "This app works just like a normal \"Chat\"-App. Add a new \"Contact\" with \"+\" and start chatting with the Websocket Server": "Diese App funktioniert wie ein normaler \"Chat\"-App. Füge mit \"+\" einen neuen \"Kontakt\" hinzu und beginne mit dem Websocket Server zu chatten",
     "Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.": "Geben Sie das Kennwort des Websocket-Server hier bei Github Schauen Sie die Umsetzung der Passwort-Verschlüsselung zu sehen.",
-    "Password": "Passwort"
+    "Password": "Passwort",
+    "Unhandled error ": "Unbehandelter Fehler "
 }

@@ -49,6 +49,10 @@ class Chat extends Component<Props & WithTranslation, State> {
     history_location: -1
     // connections: undefined,
   };
+  componentDidMount(){
+    if(this.props.connection===undefined){return}
+    this.props.setCurrentChat(this.props.connection.id)
+  }
   onSubmit(e: React.FormEvent) {
     e.preventDefault()
     this.onSubmit2()
@@ -84,7 +88,6 @@ class Chat extends Component<Props & WithTranslation, State> {
     this.props.establishConnection(this.props.connection)
   }
   onKeyDown(e: React.KeyboardEvent) {
-    console.log(e.keyCode)
     if (this.props.connection === undefined) { return }
     var lastInputs = this.props.connection.messages.filter((value: Message) => {
       if (value.member.id === -1) {
@@ -204,6 +207,7 @@ const mapDispatchToProps = {
   clearMessages: (con: Connection) => actions.connection.clearMessages(con),
   setChatInput: (con: Connection, text: string | undefined) => actions.connection.setChatInput(con, text),
   saveConnections: (connections: Connection[], active: Connection) => actions.connection.saveConnections(connections, active),
+  setCurrentChat: (num:number) => actions.connection.setCurrentChat(num),
 };
 
 export default withRouter(connect(

@@ -2,13 +2,15 @@ import * as connections from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { ConnectionState, Connection, Message, Command } from './types';
 import * as crypto from '../encryption'
+import * as cogoToast from '../../components/CustomToasts';
+import i18n from '../../i18n';
 
 
 export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.1',
+  version: '1.2',
 }
 
 export default (state = connectionDefaultState, action: ActionType<typeof connections>): ConnectionState => {
@@ -63,29 +65,56 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon = state.connections
       newCon[state.connections.indexOf(action.payload)] = action.payload
       date = Date.now()
-      Msg = { member: { id: -2 }, date: date, text: "Connected" } as Message;
+      Msg = { member: { id: -2 }, date: date, text: i18n.t("Connected") } as Message;
       newCon[state.connections.indexOf(action.payload)].messages = [...action.payload.messages, Msg]
       return {
         ...state,
         connections: [...newCon],
       }
     case getType(connections.websocketConnection.failure):
-      console.error('Websocket-server failure')
-      console.error(action.payload)
-      curCon = action.payload
+      curCon = action.payload[0]
       if (curCon === undefined) {
         console.error('Failed')
         return state;
       }
-      action.payload.connected = false
-      newCon = state.connections
-      newCon[state.connections.indexOf(curCon)] = action.payload
+      const errorEvent = action.payload[1]
       date = Date.now()
-      Msg = { member: { id: -2 }, date: date, text: "Failure" } as Message;
-      newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
+      var text = ""
+      if (errorEvent.type === 'error') {
+        cogoToast.error(i18n.t('Connection with ') + curCon.name + i18n.t(' failed.') + ' ' + errorEvent.reason)
+        Msg = { member: { id: -2 }, date: date, text: i18n.t('Failure') } as Message;
+        curCon.messages = [...curCon.messages, Msg]
+      }
+      else if (errorEvent.type === 'close') {
+        if (errorEvent.wasClean) {
+          cogoToast.warn(i18n.t('Connection with ') + curCon.name + i18n.t(' closed.'))
+          Msg = { member: { id: -2 }, date: date, text: i18n.t('Disconnected') } as Message;
+          curCon.messages = [...curCon.messages, Msg]
+        }
+        else {
+          cogoToast.info(i18n.t('Connection with ') + curCon.name + i18n.t(' closed.') + ' (' + errorEvent.code + ')')
+          Msg = { member: { id: -2 }, date: date, text: i18n.t('Disconnected')+' ('+errorEvent.code+')' } as Message;
+          curCon.messages = [...curCon.messages, Msg]
+        }
+      }
+      else {
+        text = i18n.t('Unhandled error ') + errorEvent.reason
+        cogoToast.info(text)
+        Msg = { member: { id: -2 }, date: date, text: text } as Message;
+        curCon.messages = [...curCon.messages, Msg]
+      }
+      console.error(action.payload)
+      newCon = state.connections
+      curCon.connected = false
+      newCon[state.connections.indexOf(curCon)] = curCon
       return {
         ...state,
         connections: [...newCon],
+      }
+    case getType(connections.setCurrentChat):
+      return {
+        ...state,
+        currentChat: action.payload,
       }
     case getType(connections.setState2):
       return {
@@ -106,8 +135,8 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].connected = false
       newCon[state.connections.indexOf(curCon)].ws = undefined
       date = Date.now()
-      Msg = { member: { id: -2 }, date: date, text: "Disconnected" } as Message;
-      newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
+      // Msg = { member: { id: -2 }, date: date, text: "Disconnected" } as Message;
+      // newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
       return {
         ...state,
         connections: [...newCon],
@@ -143,6 +172,9 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       date = Date.now()
       Msg = { member: { id: curCon.id, name: curCon.name }, date: date, text: recv } as Message;
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
+      if(curCon.id!==state.currentChat){
+        cogoToast.info(i18n.t('Message from ') + curCon.name+':'+recv)
+      }
       return {
         ...state,
         connections: [...newCon],
@@ -158,7 +190,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       // if (curCon.ws !== undefined) {
       //   curCon.ws.close()
       // }
-      curCon.commands.splice(curCon.commands.indexOf(action.meta),1)
+      curCon.commands.splice(curCon.commands.indexOf(action.meta), 1)
       newCon[state.connections.indexOf(curCon)] = curCon
       return {
         ...state,
@@ -223,7 +255,6 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
           if (found === false) {
             curCon.commands = [...curCon.commands, { value: message, num: 1 } as Command]
           }
-          console.log(curCon.commands)
           curCon.messages = [...curCon.messages, Msg]
           if (curCon.password !== "") {
             message = crypto.encryptStr(action.meta, curCon.password)

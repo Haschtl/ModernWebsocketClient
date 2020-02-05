@@ -27,6 +27,17 @@ input {
   flex-grow: 1;
 }
 
+.Footer {
+  background-color: black;
+}
+form {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  max-width: 900px;
+  /* margin: 0 auto 40px; */
+}
+
 Messageslist {
   padding: 20px 0;
   max-width: 900px;
@@ -61,33 +72,9 @@ Messageslist {
   display: inline-block;
 }
 
-.Footer {
-  background-color: transparent;
-}
-.Message-time {
-  text-align: left;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: space-between;
-}
 
 .currentMember > .Message-content {
   align-items: flex-end;
-}
-
-.Messages-message > .avatar {
-  height: 35px;
-  width: 35px;
-  border-radius: 50%;
-  display: inline-block;
-  margin: 0 10px -10px;
-}
-
-.Message-content > .username {
-  display: block;
-  color: gray;
-  font-size: 14px;
-  padding-bottom: 4px;
 }
 
 .Message-content > .text {
@@ -104,22 +91,22 @@ Messageslist {
   background-color: orangered;
 }
 
+.CurrentJsonMember {
+  background-color: transparent;
+  align-items: flex-end;
+  border-top: 1px solid orangered;
+  border-bottom: 1px solid orangered;
+}
+.JsonMember {
+  background-color: transparent;
+  border-top: 1px solid cornflowerblue;
+  border-bottom: 1px solid cornflowerblue;
+}
+
 .appMember > .Message-content .text {
   background-color: transparent;
 }
 
-footer {
-
-  background-color: transparent;
-}
-
-form {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  max-width: 900px;
-  /* margin: 0 auto 40px; */
-}
 
 :root {
   --ion-color-angular: #ac282b;

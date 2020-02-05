@@ -119,13 +119,11 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
               role: 'cancel',
               cssClass: 'secondary',
               handler: () => {
-                console.log('Userinput: Cancel new connection');
               }
             },
             {
               text: this.props.t('Add'),
               handler: (alertData) => {
-                console.log('Userinput: Add connection');
                 this.addNewConnection(alertData)
               }
             }

@@ -1,6 +1,6 @@
 ![](https://github.com/Haschtl/ModernWebsocketClient/blob/master/public/assets/icon/favicon.png)
 
-# OpenSource Websocket Client v1.0
+# OpenSource Websocket Client v1.2
 [Homepage](https://haschtl.github.io/ModernWebsocketClient/)
 [Demo](https://modern-websocket-client.web.app)
 ## Description
@@ -8,6 +8,9 @@
 - This is an **OpenSource** project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
 - This is a simple WebsocketClient-Application with Input-Completition and some small nice features. You can use SecureWebsockets (SSL) or normal Websockets.
 - Connect to multiple servers at the same time.
+- Nice JSON-Data formatting
+- Custom AES-Ecryption
+- Communication-Protocoll
 
 ## Example Ionic4 React project
 This app can be seen as an Ionic4 React example, that can be deployed on all available platforms with the following features:

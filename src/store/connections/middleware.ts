@@ -156,16 +156,7 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
 
     // websocket onclose event listener
     ws.onclose = (e: any) => {
-      console.warn(
-        `Socket is closed. Reconnect will be attempted in ${Math.min(
-          10000 / 1000,
-          (action.payload.timeout + action.payload.timeout) / 1000
-        )} second.`,
-        e.reason
-      );
-      cogoToast.warn(i18n.t('Connection with ') + action.payload.name + i18n.t(' closed.'))
-      next(connections.websocketConnection.failure(action.payload));
-
+      next(connections.websocketConnection.failure([action.payload, e]));
     };
 
     ws.onmessage = (evt: any) => {
@@ -173,14 +164,8 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     }
 
     // websocket onerror event listener
-    ws.onerror = (err: any) => {
-      console.error(
-        "Socket encountered error: ",
-        err,
-        "Closing socket"
-      );
-      cogoToast.error(i18n.t('Connection with ') + action.payload.name + i18n.t(' failed.'))
-      next(connections.websocketConnection.failure(action.payload));
+    ws.onerror = (e: any) => {
+      next(connections.websocketConnection.failure([action.payload, e]));
       ws.close();
     };
   }
