@@ -73,13 +73,13 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       console.error('Websocket-server failure')
       console.error(action.payload)
       curCon = action.payload
-      if (con === undefined) {
+      if (curCon === undefined) {
         console.error('Failed')
         return state;
       }
       action.payload.connected = false
       newCon = state.connections
-      newCon[state.connections.indexOf(con)] = action.payload
+      newCon[state.connections.indexOf(curCon)] = action.payload
       date = Date.now()
       Msg = {member: {id: -2}, date:date, text: "Failure"} as Message;
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]

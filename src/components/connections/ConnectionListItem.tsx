@@ -82,14 +82,14 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
     });
   }
 
-  establishConnection(connection: Connection) {
-    this.props.establishConnection(connection)
-  }
+  // establishConnection(connection: Connection) {
+  //   this.props.establishConnection(connection)
+  // }
 
-  quitConnection(connection: Connection) {
-    this.props.quitConnection(connection)
-    this.dismissAlert()
-  }
+  // quitConnection(connection: Connection) {
+  //   this.props.quitConnection(connection)
+  //   this.dismissAlert()
+  // }
 
   render() {
     const connection = this.props.connection;
@@ -156,8 +156,8 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
   removeConnection: (connection: Connection) => actions.connection.removeConnection(connection),
   saveConnections: (connections: Connection[]) => actions.connection.saveConnections(connections),
-  establishConnection: (connection: Connection) => actions.connection.establishConnection(connection),
-  quitConnection: (connection: Connection) => actions.connection.quitConnection(connection),
+  // establishConnection: (connection: Connection) => actions.connection.establishConnection(connection),
+  // quitConnection: (connection: Connection) => actions.connection.quitConnection(connection),
   clearReducerHistory: () => actions.connection.clearReducerHistory(),
 }
 
