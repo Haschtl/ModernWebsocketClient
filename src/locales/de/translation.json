@@ -61,5 +61,7 @@
     "Enter your message and press ENTER": "Nachricht eingeben und absenden...",
     "It's written in Typescript using Ionic4 with React": "Es ist in Typescript mit Ionic4 mit React geschrieben.",
     "This is a OpenSource Websocket Client App with SSL support": "Dies ist eine OpenSource-Websocket-Client-Anwendung mit SSL-Unterstützung.",
-    "This app works just like a normal \"Chat\"-App. Add a new \"Contact\" with \"+\" and start chatting with the Websocket Server": "Diese App funktioniert wie ein normaler \"Chat\"-App. Füge mit \"+\" einen neuen \"Kontakt\" hinzu und beginne mit dem Websocket Server zu chatten"
+    "This app works just like a normal \"Chat\"-App. Add a new \"Contact\" with \"+\" and start chatting with the Websocket Server": "Diese App funktioniert wie ein normaler \"Chat\"-App. Füge mit \"+\" einen neuen \"Kontakt\" hinzu und beginne mit dem Websocket Server zu chatten",
+    "Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.": "Geben Sie das Kennwort des Websocket-Server hier bei Github Schauen Sie die Umsetzung der Passwort-Verschlüsselung zu sehen.",
+    "Password": "Passwort"
 }

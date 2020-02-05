@@ -1,6 +1,7 @@
 import * as connections from './actions';
 import { ActionType, getType } from 'typesafe-actions';
 import { ConnectionState, Connection, Message, Command } from './types';
+import * as crypto from '../encryption'
 
 
 export const connectionDefaultState: ConnectionState = {
@@ -185,6 +186,9 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       if (curCon.ws !== undefined) {
         try {
           var message = action.meta;
+          if (curCon.password !== "") {
+            message = crypto.encryptStr(action.meta, curCon.password)
+          }
           curCon.ws.send(message)
           const date = Date.now()
           const Msg = {member: {id: -1, name: 'Me'}, date: date, text: message} as Message;

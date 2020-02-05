@@ -5,8 +5,10 @@ import { Middleware } from 'redux';
 import * as cogoToast from '../../components/CustomToasts';
 import i18n from '../../i18n';
 import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+import * as myCrypto from '../encryption';
 
 const { Storage, Filesystem } = Plugins;
+var crypto = require('crypto');
 
 
 export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ getState }) => next => async (action: ActionType<typeof connections>) => {
@@ -64,6 +66,9 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
           }
           if (connectionList[i].messages === undefined) {
             connectionList[i].messages = []
+          }
+          if (connectionList[i].password === undefined) {
+            connectionList[i].password = ''
           }
         }
         next(connections.fetchConnections.success(connectionList));
@@ -143,6 +148,11 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
       next(connections.createWebsocket(action.payload, ws));
       next(connections.websocketConnection.success(action.payload));
       // hash = crypto.createHash("sha256").update(action.payload.password, 'utf8').digest('base64')
+      var hash = ''
+      if (action.payload.password !== "") {
+        hash = crypto.createHash("sha256").update(action.payload.password, 'utf8').digest('base64')
+        next(connections.sendWebsocket(action.payload, JSON.stringify({ 'authorize': hash })));
+      }
     };
 
     // websocket onclose event listener
@@ -160,6 +170,16 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     };
 
     ws.onmessage = (evt: any) => {
+      if(action.payload.password !== ''){
+        const message = myCrypto.decryptStr(evt.data, action.payload.password)
+        if (message !== undefined) {
+          next(connections.newDataIncoming(action.payload, evt.data));
+        }
+        else {
+          cogoToast.warn(i18n.t('Password not needed'))
+          next(connections.newDataIncoming(action.payload, evt.data));
+        }
+      }
       next(connections.newDataIncoming(action.payload, evt.data));
     }
 

@@ -23,6 +23,7 @@ type State = {
   name: string
   host: string
   port: number
+  password: string
   timeout: number
   id: number
   ssl: boolean
@@ -42,6 +43,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     name: '',
     host: '',
     port: 0,
+    password: '',
     timeout: 5,
     id: -1,
     ssl: false,
@@ -89,6 +91,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       name: this.props.connection.name,
       host: this.props.connection.host,
       port: this.props.connection.port,
+      password: this.props.connection.password,
       timeout: this.props.connection.timeout,
       info: this.props.connection.info,
       id: this.props.connection.id,
@@ -134,6 +137,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         name: this.state.name,
         host: this.state.host,
         port: this.state.port,
+        password: this.state.password,
         timeout: this.state.timeout,
         connected: false,
         commands: this.state.commands,
@@ -218,6 +222,15 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                     theme={this.props.theme}
                   />
                   <IonToggle slot='end' checked={this.state.ssl} onIonChange={() => this.toggleSSL()}></IonToggle>
+                </IonItem>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Password")}
+                    text={<Trans>Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.</Trans>}
+                    item={<IonLabel position="floating"><Trans>Password</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonInput type="password" placeholder="" value={this.state.password} onIonChange={(e: CustomEvent, key: string = 'password') => this.showSaveButton(e, key)}></IonInput>
                 </IonItem>
                 <IonItem>
                   <DescriptionFloater

@@ -11,7 +11,8 @@ export interface Connection {
   ssl: boolean,
   ws?: WebSocket,
   chatInput?: string,
-  messages: Message[]
+  messages: Message[],
+  password: string
 }
 
 export interface ConnectionState {
