@@ -121,6 +121,7 @@ type State = {
   alertHeader?: string;
   alertMessage?: string;
   alertButtons: (AlertButton | string)[];
+  beautify: boolean;
 }
 
 class ConnectionDetail extends React.PureComponent<Props & WithTranslation, State> {
@@ -141,6 +142,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     alertHeader: '',
     alertMessage: undefined,
     alertButtons: [],
+    beautify: true
   }
 
   constructor(props: Props & WithTranslation) {
@@ -169,6 +171,9 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
   toggleSSL() {
     this.setState({ ...this.state, 'ssl': !this.state.ssl, 'isEdited': true })
   }
+  toggleBeautify(){
+    this.setState({ ...this.state, 'beautify': !this.state.beautify, 'isEdited': true })
+  }
 
   resetState() {
     if (this.props.connection === undefined) {
@@ -181,6 +186,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       password: this.props.connection.password,
       timeout: this.props.connection.timeout,
       info: this.props.connection.info,
+      commands: this.props.connection.commands,
       id: this.props.connection.id,
       ssl: this.props.connection.ssl,
       isEdited: false,
@@ -188,6 +194,8 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       alertHeader: '',
       alertMessage: undefined,
       alertButtons: [],
+      beautify: this.props.connection.beautify,
+      messages: this.props.connection.messages,
     })
   }
 
@@ -231,6 +239,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         info: this.state.info,
         id: this.state.id,
         ssl: this.state.ssl,
+        beautify: this.state.beautify,
         // messages: [],
         autoconnect: false,
         messages: this.state.messages
@@ -253,6 +262,9 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     }
     else if (num.detail.value === 1) {
       commands = [...RTOCCOMMANDS] as Command[]
+    }
+    else{
+      commands = [] as Command[]
     }
     this.props.setCommands(this.props.connection, commands)
   }
@@ -337,6 +349,15 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                 </IonItem>
                 <IonItem>
                   <DescriptionFloater
+                    title={this.props.t("Beautify")}
+                    text={<Trans>If true, messages will be parsed for JSON content, which will then by displaced interactively. Works also with Crescience-Protocol!</Trans>}
+                    item={<IonLabel position="floating"><Trans>Beatify</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonToggle slot='end' checked={this.state.beautify} onIonChange={() => this.toggleBeautify()}></IonToggle>
+                </IonItem>
+                <IonItem>
+                  <DescriptionFloater
                     title={this.props.t("Password")}
                     text={<Trans>Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.</Trans>}
                     item={<IonLabel position="floating"><Trans>Password</Trans></IonLabel>}
@@ -371,6 +392,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                   theme={this.props.theme}
                 />
                 <IonSelect onIonChange={(e) => this.setDefaultCommands(e)}>
+                  <IonSelectOption value={-1} ><Trans>Clear</Trans></IonSelectOption>
                   <IonSelectOption value={0} ><Trans>Crescience Deneb</Trans></IonSelectOption>
                   <IonSelectOption value={1} ><Trans>RTOC</Trans></IonSelectOption>
                 </IonSelect>

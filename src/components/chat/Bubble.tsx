@@ -30,6 +30,52 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     };
   }
 
+  cres2json(str: string) {
+    const strsplit = str.split('::')
+    var sender = undefined
+    var message = undefined
+    var value = undefined
+    if (strsplit.length === 3) {
+      sender = strsplit[0]
+      message = strsplit[1] //.split(':')
+      value = strsplit[2]
+      return { "sender": sender, "message": message, "value": value }
+    }
+    else if (strsplit.length === 2) {
+      sender = strsplit[0]
+      message = strsplit[1] //.split(':')
+      return { "sender": sender, "message": message }
+    }
+    else if (strsplit.length === 1) {
+      var strsplit2 = str.split(':')
+      strsplit2 = [strsplit2[0],strsplit2.slice(1,strsplit2.length).join(':')]
+      
+      if (strsplit2.length === 2) {
+        console.log(strsplit2)
+        console.log(strsplit2[1].split('='))
+        if(strsplit2[1].indexOf('(')>=0){
+          return { "target": strsplit2[0], 
+          "call": strsplit2[1].slice(0,strsplit2[1].indexOf('(')),
+          "arguments": strsplit2[1].slice(strsplit2[1].indexOf('(')+1,strsplit2[1].indexOf(')')+1-strsplit2[1].indexOf('(')).split(',')
+          }
+        }
+        else if(strsplit2[1].split('=').length>=2){
+          return { "target": strsplit2[0], 
+          "set": strsplit2[1].slice(0,strsplit2[1].indexOf('=')), 
+          "value": strsplit2[1].slice(strsplit2[1].indexOf('=')+1,strsplit2[1].length)}
+        }
+        else if(strsplit2[1].indexOf(':')>=0){
+          return { "target": strsplit2[0], "get": strsplit2[1]}
+        }
+        else{return undefined}
+      }
+      else{
+        return undefined
+      }
+    }
+    else { return undefined }
+  }
+
   render() {
     const { member, text, date } = this.props.message;
     const messageFromMe = member.id === -1;
@@ -48,16 +94,23 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       datestring = new Date(date).toLocaleDateString()
 
     }
-    var json=undefined
-    try{
-    json = JSON.parse(text)
+    var json = undefined
+    if(this.props.connection.beautify===true){
+    try {
+      json = JSON.parse(text)
     }
     catch{
-      
-    }
+      try {
+        json = this.cres2json(text)
+        console.log(json)
+      }
+      catch (e){
+        console.log(e)
+       }
+    }}
     return (<>
       {this.props.idx % 5 === 0 &&
-        <IonItemDivider sticky style={{textAlign: 'center'}}>
+        <IonItemDivider sticky style={{ textAlign: 'center' }}>
           {timestring}&nbsp;&nbsp;{datestring}
         </IonItemDivider>
       }
@@ -67,12 +120,12 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
             <div className="text">{text} @{timestring}</div>
             :
             json === undefined ?
-            <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
-            :
-            <JSONTree data={json} 
-            hideRoot={true} 
-            theme={{tree: (style:any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }),}}
-          />
+              <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+              :
+              <JSONTree data={json}
+                hideRoot={true}
+                theme={{ tree: (style: any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }), }}
+              />
           }
         </div>
       </li></>

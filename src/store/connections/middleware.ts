@@ -69,6 +69,9 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
           if (connectionList[i].password === undefined) {
             connectionList[i].password = ''
           }
+          if (connectionList[i].beautify === undefined) {
+            connectionList[i].beautify = true
+          }
         }
         next(connections.fetchConnections.success(connectionList));
       }
