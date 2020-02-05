@@ -2,7 +2,7 @@ import React
   from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { IonHeader, IonInput, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle } from '@ionic/react';
+import { IonHeader, IonInput, IonText, IonBadge, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle } from '@ionic/react';
 import { RootState, actions, selectors } from '../../store';
 import { Connection, Message, Command } from '../../store/connections/types';
 import { save } from 'ionicons/icons';
@@ -112,7 +112,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       alertButtons: [
         {
           text: this.props.t('Cancel'),
-          handler: () => this.setState({showAlert: false})
+          handler: () => this.setState({ showAlert: false })
         },
         {
           text: this.props.t('Remove'),
@@ -152,6 +152,11 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       this.props.saveConnections(this.props.connections)
     }
   }
+  removeCommand(value:Command) {
+    if(this.props.connection===undefined){return}
+    this.props.removeCommand(this.props.connection, value)
+    this.props.saveConnections(this.props.connections)
+  }
 
   render() {
     if (this.props.connection === undefined) {
@@ -165,12 +170,12 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
           isOpen={this.state.showAlert}
           header={this.state.alertHeader}
           buttons={this.state.alertButtons}
-          onDidDismiss={() => this.setState({showAlert: false})}
+          onDidDismiss={() => this.setState({ showAlert: false })}
         ></IonAlert>
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonBackButton defaultHref={'/chat/'+connection.id} />
+              <IonBackButton defaultHref={'/chat/' + connection.id} />
             </IonButtons>
             <IonTitle>{this.state.name}</IonTitle>
             {this.state.isEdited ?
@@ -245,6 +250,28 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
             </IonCardContent>
           </IonCard>
 
+          <IonCard>
+            <IonCardHeader>
+              <Trans>Commands</Trans>
+            </IonCardHeader>
+
+            <IonCardContent className="ion-padding">
+              <IonList>
+                {
+                  this.props.connection.commands.sort(((a, b) => (
+                    b.num - a.num
+                  ))).map((value: Command, index: number) => (
+                    <IonItem key={'command'+index} onClick={(e)=>this.removeCommand(value)}>
+                      <IonText>{value.value}</IonText>
+                      <IonBadge color="success" slot="end">
+                        {value.num}
+                      </IonBadge>
+                    </IonItem>
+                  ))
+                }
+              </IonList>
+            </IonCardContent>
+          </IonCard>
         </IonContent>
 
         <IonFooter>
@@ -277,9 +304,9 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
             <IonGrid>
               <IonRow>
                 <IonCol col-6>
-                    <IonButton expand="full" fill="solid" color="danger" onClick={() => this.resetState()}>
-                      <Trans>Discard</Trans>
-                    </IonButton>
+                  <IonButton expand="full" fill="solid" color="danger" onClick={() => this.resetState()}>
+                    <Trans>Discard</Trans>
+                  </IonButton>
                 </IonCol>
                 <IonCol>
                   <IonButton expand="full" fill="solid" color="success" onClick={(e) => this.saveConnection(e)}>
@@ -295,7 +322,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps:RouteComponentProps<{ id: string, tab: string }>) => ({
+const mapStateToProps = (state: RootState, ownProps: RouteComponentProps<{ id: string, tab: string }>) => ({
   connections: state.connections.connections,
   connection: selectors.connection.connectionByID(state.connections.connections, parseInt(ownProps.match.params.id, 10)),
   reducerHistory: state.connections.history,
@@ -309,6 +336,7 @@ const mapDispatchToProps = {
   editConnection: (connection: Connection) => actions.connection.editConnection(connection),
   saveConnections: (connections: Connection[]) => actions.connection.saveConnections(connections),
   clearReducerHistory: () => actions.connection.clearReducerHistory(),
+  removeCommand: (connection: Connection, command: Command) => actions.connection.removeCommand(connection, command),
 }
 
 export default connect(

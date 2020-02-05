@@ -28,12 +28,15 @@ import {
 } from 'ionicons/icons';
 
 
-type Props = RouteComponentProps<{ id: string, tab: string }> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps>;
+type Props = RouteComponentProps<{ id: string, tab: string }> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & {
+  // connection: Connection
+};
 
 type State = {
   textinput: string;
   showPopover: boolean;
   event: React.MouseEvent | undefined;
+  // connections: Connection[] | undefined;
 };
 
 
@@ -41,13 +44,26 @@ class Chat extends Component<Props & WithTranslation, State> {
   state = {
     textinput: '',
     showPopover: false,
-    event: undefined
+    event: undefined,
+    // connections: undefined,
   };
-
-  shouldComponentUpdate(props:Props, newState:State){
-    console.log('Update chat')
-    return true
-  }
+  constructor(props:Props & WithTranslation) {
+    super(props);
+    // console.log(this.props);
+    // this.state = state
+ }
+  // shouldComponentUpdate(props:Props, newState:State){
+  //   console.log('Update chat')
+  //   return true
+  // }
+  // componentWillReceiveProps(nextProps:Props) {
+  //   console.log('chat  received props')
+  //     if (this.state.connections !== nextProps.connections) {
+  //         this.setState({
+  //           connections: nextProps.connections,
+  //         });
+  //     }
+  // }
 
   onSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -114,9 +130,9 @@ class Chat extends Component<Props & WithTranslation, State> {
                 <IonButton expand="full" routerLink={'/connect/' + this.props.connection.id}><Trans>Settings</Trans></IonButton>
                 <IonButton expand="full" onClick={() => { this.clearMessages() }}><Trans>Clear</Trans></IonButton>
                 {this.props.connection.connected === false?
-                <IonButton color="secondary" expand="full" onClick={() => (this.props.establishConnection(connection))}>Connect</IonButton>
+                <IonButton color="secondary" expand="full" onClick={() => (this.props.establishConnection(connection))}><Trans>Connect</Trans></IonButton>
                 :
-                <IonButton color="error" expand="full" onClick={() => (this.props.quitConnection(connection))}>Disconnect</IonButton>
+                <IonButton color="error" expand="full" onClick={() => (this.props.quitConnection(connection))}><Trans>Disconnect</Trans></IonButton>
                 }
               </IonPopover>
               <IonButton onClick={(e) => this.showMenu(e)}><Trans><IonIcon icon={menu}></IonIcon></Trans></IonButton>

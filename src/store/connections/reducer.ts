@@ -67,7 +67,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(action.payload)].messages = [...action.payload.messages, Msg]
       return {
         ...state,
-        connections: newCon,
+        connections: [...newCon],
       }
     case getType(connections.websocketConnection.failure):
       console.error('Websocket-server failure')
@@ -85,7 +85,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
       return {
         ...state,
-        connections: newCon,
+        connections: [...newCon],
       }
     case getType(connections.setState2):
       return {
@@ -110,7 +110,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
       return {
         ...state,
-        connections: newCon,
+        connections: [...newCon],
       }
 
     case getType(connections.clearMessages):
@@ -123,7 +123,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].messages = []
       return {
         ...state,
-        connections: newCon,
+        connections: [...newCon],
       }
     case getType(connections.newDataIncoming):
       curCon = action.payload
@@ -138,8 +138,25 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
         return {
           ...state,
-          connections: newCon,
+          connections: [...newCon],
         }
+    
+    case getType(connections.removeCommand):
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
+      }
+      newCon = state.connections
+      // if (curCon.ws !== undefined) {
+      //   curCon.ws.close()
+      // }
+      curCon.commands.splice(curCon.commands.indexOf(action.meta))
+      newCon[state.connections.indexOf(curCon)] = curCon
+      return {
+        ...state,
+        connections: [...newCon],
+      }
 
     case getType(connections.createWebsocket):
       curCon = action.payload
@@ -154,7 +171,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].ws = action.meta
       return {
         ...state,
-        connections: newCon,
+        connections: [...newCon],
       }
 
     case getType(connections.clearReducerHistory):
@@ -173,7 +190,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       newCon[state.connections.indexOf(curCon)].chatInput = action.meta
       return {
         ...state,
-        connections: newCon,
+        connections: [...newCon],
       }
     case getType(connections.sendWebsocket):
       if(action.meta === '') {return state}
@@ -208,7 +225,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
           newCon[newCon.indexOf(action.payload)]=curCon
           return {
             ...state,
-            connections: newCon,
+            connections: [...newCon],
           }
         }
         catch{

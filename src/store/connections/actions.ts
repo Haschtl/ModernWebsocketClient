@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from 'typesafe-actions';
-import { Connection, Theme, Tutorial } from './types';
+import { Connection, Command, Theme, Tutorial } from './types';
 
 export const fetchConnections = createAsyncAction(
   'connect/FETCH_REQUEST',
@@ -17,6 +17,10 @@ export const saveConnections = createAction('connect/SAVE_CONNECTIONS', resolve 
 
 export const editConnection = createAction('connect/EDIT_CONNECTION', resolve =>
   (connection: Connection) => resolve(connection)
+);
+
+export const removeCommand = createAction('connect/REMOVE_COMMAND', resolve =>
+  (connection: Connection, command: Command) => resolve(connection, command)
 );
 
 export const loadConnections = createAction('connect/LOAD_CONNECTIONS', resolve =>

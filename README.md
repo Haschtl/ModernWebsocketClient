@@ -14,6 +14,7 @@ This app can be seen as an Ionic4 React example, that can be deployed on all ava
 - Automatic language detection (with custom translation files)
 - Using storage
 - Using Websocket connections
+- Custom-AES-Encryption
 
 I provide platform-specific instructions in this readme below.
 
@@ -138,7 +139,11 @@ electron-windows-store `
     --package-name WebsocketClient
 
 
-
+## Custom AES Encryption
+The custom encryption consists of two parts:
+1. Encryption of every message with AES and first 16-chars of SHA256-Hash of provided password
+AES is used with IV=16random byte. These random bytes are append to the encrypted message.
+2. Additionally, the client sends a json to the server to get authentification (handshake): `{authorize: FULL_SHA256_HASH}`
 
 
 ## Example systemd-service
