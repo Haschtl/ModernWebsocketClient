@@ -5,43 +5,19 @@ import { ConnectionState, Connection, Message, Command } from './types';
 
 export const connectionDefaultState: ConnectionState = {
   connections: [],
-  waiting: false,
-  maxN: 1000,
-  zoomArgument: true,
-  panArgument: true,
-  zoomValue: false,
-  panValue: false,
-  messages: [],
-  userActions: [],
   theme: 'dark-theme',
   tutorials: [],
   version: '1.0',
-  log: []
 }
 
 export default (state = connectionDefaultState, action: ActionType<typeof connections>): ConnectionState => {
   var con: Connection | undefined;
   var newCon: Connection[];
   var newId: number;
+  var curCon: Connection;
+  var date: number;
+  var Msg: Message;
   switch (action.type) {
-
-    case getType(connections.clearLog):
-      return {
-        ...state,
-        log: []
-      }
-
-    case getType(connections.log):
-      var oldList = state.log
-      oldList.push(action.payload)
-      if (oldList.length > 10) {
-        oldList.splice(0,1)
-        }
-      return {
-        ...state,
-        log: oldList 
-      }
-
     case getType(connections.fetchConnections.success):
       return {
         ...state,
@@ -64,7 +40,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       state.connections.push(action.payload)
       return state;
     case getType(connections.removeConnection):
-      con = state.connections.find(e => e.id === action.payload);
+      con = state.connections.find(e => e.id === action.payload.id);
       if (con === undefined) {
         console.error('Failed')
         return state;
@@ -82,27 +58,20 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
 
     case getType(connections.websocketConnection.success):
       console.log('Websocket-server connected')
-      con = action.payload;
-      if (con === undefined) {
-        console.error('Failed')
-        return {
-          ...state,
-          active: undefined
-        }
-      }
       action.payload.connected = true
       newCon = state.connections
-      newCon[state.connections.indexOf(con)] = action.payload
+      newCon[state.connections.indexOf(action.payload)] = action.payload
+      date = Date.now()
+      Msg = {member: {id: -2}, date:date, text: "Connected"} as Message;
+      newCon[state.connections.indexOf(action.payload)].messages = [...action.payload.messages, Msg]
       return {
         ...state,
         connections: newCon,
-        active: con,
-        history: '/chat',
       }
     case getType(connections.websocketConnection.failure):
       console.error('Websocket-server failure')
       console.error(action.payload)
-      con = action.payload
+      curCon = action.payload
       if (con === undefined) {
         console.error('Failed')
         return state;
@@ -110,69 +79,81 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       action.payload.connected = false
       newCon = state.connections
       newCon[state.connections.indexOf(con)] = action.payload
+      date = Date.now()
+      Msg = {member: {id: -2}, date:date, text: "Failure"} as Message;
+      newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
       return {
         ...state,
         connections: newCon,
-        active: undefined,
-        history: '/connect',
-        config: undefined,
-        userActions: []
       }
     case getType(connections.setState2):
       return {
         ...state,
         ...action.payload
       }
-    case getType(connections.deleteActionPicture):
-      return {
-        ...state,
-        actionPicture: undefined
-      }
     case getType(connections.websocketClosed):
       console.log('Websocket-server closed')
-      if (state.ws !== undefined) {
-        state.ws.close()
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
       }
-      var oldActive = state.active
-      if (oldActive === undefined) {
+      if (curCon.ws !== undefined) {
+        curCon.ws.close()
+      }
+      newCon = state.connections
+      newCon[state.connections.indexOf(curCon)].connected = false
+      newCon[state.connections.indexOf(curCon)].ws = undefined
+      date = Date.now()
+      Msg = {member: {id: -2}, date:date, text: "Disconnected"} as Message;
+      newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
+      return {
+        ...state,
+        connections: newCon,
+      }
+
+    case getType(connections.clearMessages):
+      curCon = action.payload
+      if (curCon === undefined) {
         console.error('Failed')
         return state;
       }
       newCon = state.connections
-      newCon[state.connections.indexOf(oldActive)].connected = false
+      newCon[state.connections.indexOf(curCon)].messages = []
       return {
         ...state,
         connections: newCon,
-        active: undefined,
-        ws: undefined
-      }
-
-    case getType(connections.clearMessages):
-      return {
-        ...state,
-        messages: []
       }
     case getType(connections.newDataIncoming):
-      if (state.active === undefined) {
-        console.error('Cannot receive message. No active connection')
-        return { ...state }
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
       }
-        const recv: any = action.payload
-        var active = state.active
-        const date = Date.now()
-        const Msg = {member: active, date:date, text: recv} as Message;
+      newCon = state.connections
+      const recv: any = action.meta
+      date = Date.now()
+      Msg = {member: {id: curCon.id, name: curCon.name}, date:date, text: recv} as Message;
+      newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
         return {
           ...state,
-          messages: [...state.messages, Msg]
+          connections: newCon,
         }
 
     case getType(connections.createWebsocket):
-      if (action.payload === undefined && state.ws !== undefined) {
-        state.ws.close()
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
       }
+      newCon = state.connections
+      // if (curCon.ws !== undefined) {
+      //   curCon.ws.close()
+      // }
+      newCon[state.connections.indexOf(curCon)].ws = action.meta
       return {
         ...state,
-        ws: action.payload
+        connections: newCon,
       }
 
     case getType(connections.clearReducerHistory):
@@ -181,54 +162,49 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         history: undefined
       }
 
-    case getType(connections.stopWaiting):
-      return {
-        ...state,
-        waiting: false
-      }
-
-    case getType(connections.setActiveConnection):
-      return {
-        ...state,
-        active: action.payload
-      }
     case getType(connections.setChatInput):
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
+      }
+      newCon = state.connections
+      newCon[state.connections.indexOf(curCon)].chatInput = action.meta
       return {
         ...state,
-        chatInput: action.payload
+        connections: newCon,
       }
     case getType(connections.sendWebsocket):
-      if (state.active === undefined) {
-        console.error('Cant send message to host. No active connection')
-        return {
-          ...state
-        }
+      if(action.meta === '') {return state}
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
       }
-      if(action.payload === '') {return state}
-      if (state.ws !== undefined) {
+      newCon = state.connections
+      if (curCon.ws !== undefined) {
         try {
-          var message = action.payload;
-          state.ws.send(message)
-          var active2 = state.active
+          var message = action.meta;
+          curCon.ws.send(message)
           const date = Date.now()
           const Msg = {member: {id: -1, name: 'Me'}, date: date, text: message} as Message;
           
           var found=false;
-          for(var c in active2.commands){
-            if(active2.commands[c].value === message){
+          for(var c in curCon.commands){
+            if(curCon.commands[c].value === message){
               found=true;
-              active2.commands[c].num += 1
+              curCon.commands[c].num += 1
             }
           }
           if(found===false){
-            active2.commands =  [...active2.commands ,{value: message, num: 1} as Command]
+            curCon.commands =  [...curCon.commands ,{value: message, num: 1} as Command]
           }
-          console.log(active2.commands)
+          console.log(curCon.commands)
+          curCon.messages = [...curCon.messages, Msg]
+          newCon[newCon.indexOf(action.payload)]=curCon
           return {
             ...state,
-            waiting: true,
-            messages: [...state.messages, Msg],
-            active:active2
+            connections: newCon,
           }
         }
         catch{

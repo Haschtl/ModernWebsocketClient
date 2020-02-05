@@ -7,32 +7,20 @@ export interface Connection {
   connected: boolean,
   commands: Command[],
   info: string,
-  eventlevel: -1 | 0 | 1 | 2,
-  accesslevel: 'expert' | 'simple'
   autoconnect: boolean,
-  ssl: boolean
+  ssl: boolean,
+  ws?: WebSocket,
+  chatInput?: string,
+  messages: Message[]
 }
 
 export interface ConnectionState {
   connections: Connection[];
-  chatInput?: string;
-  ws?: WebSocket;
-  active?: Connection;
   history?: string;
   config?: any;
-  messages: Message[],
-  waiting: boolean;
-    maxN: number;
-  zoomArgument: boolean;
-  panArgument: boolean;
-  zoomValue: boolean;
-  panValue: boolean;
-  userActions: any[];
-  actionPicture?: string;
   theme: Theme,
   tutorials: Tutorial[],
-  version: string,
-  log: string[]
+  version: string
 }
 
 export type Theme= 'dark-theme' | 'light-theme' | 'blackwhite-theme' | 'oled-theme' | 'green-theme' | 'medium-theme'
@@ -47,7 +35,8 @@ export interface Tutorial {
 }
 
 export interface Message {
-  member: Connection | {id: -1, name: 'Me'},
+  // member: Connection | {id: -1, name: 'Me'},
+  member: {id: number},
   date?: number,
   text: string,
 }

@@ -8,6 +8,14 @@
 - This is a simple WebsocketClient-Application with Input-Completition and some small nice features. You can use SecureWebsockets (SSL) or normal Websockets.
 - Currently, you can only connect to one server at a time.
 
+## Example Ionic4 React project
+This app can be seen as an Ionic4 React example, that can be deployed on all available platforms with the following features:
+- Automatic language detection (with custom translation files)
+- Using storage
+- Using Websocket connections
+
+I provide platform-specific instructions in this readme below.
+
 ## Installation
 
 - Download the latest version for your system in the [Release-Section](https://github.com/Haschtl/ModernWebsocketClient/releases)
@@ -69,6 +77,10 @@ android:hardwareAccelerated="true"
 ```
 in the 'application' tag
 
+And also you dont want to have an Ionic Icon and Ionic Loading screen?
+Then replace all 'splash.png' in the 'android\app\src\main\res\drawable*' folders
+and all icons in the 'android\app\src\main\res\mipmap*' folder. 
+**Annoying**  -> Good that we have tools like [this](https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.clipart=android&foreground.space.trim=1&foreground.space.pad=0.25&foreColor=rgba(96%2C%20125%2C%20139%2C%200)&backColor=rgb(68%2C%20138%2C%20255)&crop=0&backgroundShape=square&effects=none&name=ic_launcher) and [that](https://romannurik.github.io/AndroidAssetStudio/nine-patches.html#&sourceDensity=320&name=example)
 
 
 

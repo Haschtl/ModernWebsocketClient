@@ -12,7 +12,8 @@
 /build
 /android
 /electron
-
+/export
+*.psd
 # misc
 .DS_Store
 .env.local

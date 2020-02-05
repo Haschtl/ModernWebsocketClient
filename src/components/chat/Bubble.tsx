@@ -2,11 +2,12 @@
   import { connect } from 'react-redux';
   import { withRouter, RouteComponentProps } from 'react-router';
   import { actions, RootState } from '../../store';
-  import { Message } from '../../store/connections/types'
+  import { Message, Connection } from '../../store/connections/types'
 
 
 type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & 
 {
+  connection:Connection,
   message:Message, 
   idx:number,
 };
@@ -26,57 +27,42 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     };
   }
 
-  sendWebsocket(msg: string) {
-    this.props.setChatInput(msg)
-    
-  }
-
   render() {
     const {member, text, date} = this.props.message;
-    const currentMember = this.props.active;
-    if(currentMember === undefined) {return}
     const messageFromMe = member.id === -1;
+    const messageFromApp = member.id === -2;
     const className = messageFromMe ?
-      "Messages-message currentMember" : "Messages-message";
+      "Messages-message currentMember" :  messageFromApp ?
+      "Messages-message appMember" : "Messages-message";
     var datestring=''
     if(date !== undefined){
-      datestring= '@'+new Date(date).toLocaleTimeString()
+      // datestring= '@'+
+      datestring = new Date(date).toLocaleTimeString()
       
     }
     return (
       <li className={className} key={'msg'+this.props.idx}>
         <div className="Message-content">
-          <div className="username">
-            {member.name} {datestring}
+        {!messageFromApp ?
+          <><div className="username">
+            {datestring}
           </div>
-          <div className="text" key={text} onClick={() => {this.sendWebsocket(this.props.message.text)}}>{text}</div>
+          <div className="text" onClick={() => {this.props.setChatInput(this.props.connection, this.props.message.text)}}>{text}</div>
+        </>
+        :
+        <div className="text">{text} {datestring}</div>
+        }
         </div>
       </li>
     );
-    // return (
-    //   <IonItem onClick={() => console.log(this.props.message)}>
-    //   {/* <span
-    //     className="avatar"
-    //     style={{backgroundColor: 'black'}}
-    //   /> */}
-    //     {/* <div className="Message-content"> */}
-    //       <IonLabel>
-    //         {member.name}
-    //       </IonLabel>
-    //       <IonText className="text" key={text} onClick={() => {this.sendWebsocket(this.props.message.text)}}>{text}</IonText>
-    //     {/* </div> */}
-    //   </IonItem>
-    // );
   }
 }
 
 const mapStateToProps = (state: RootState) => ({
-  active: state.connections.active,
 });
 
 const mapDispatchToProps = {
-  sendWebsocket: (message: string) => actions.connection.sendWebsocket(message),
-  setChatInput: (text: string|undefined) => actions.connection.setChatInput(text),
+  setChatInput: (con: Connection, text: string|undefined) => actions.connection.setChatInput(con, text),
 };
 
 export default withRouter(connect(

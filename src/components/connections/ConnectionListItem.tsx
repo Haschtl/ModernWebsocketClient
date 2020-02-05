@@ -74,7 +74,7 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
         {
           text: this.props.t('Remove'),
           handler: () => {
-            this.props.removeConnection(this.props.id);
+            this.props.removeConnection(this.props.connection);
             this.props.saveConnections(this.props.connections)
           }
         }
@@ -101,7 +101,7 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
           buttons={this.state.alertButtons}
           onDidDismiss={this.dismissAlert}
         ></IonAlert>
-        <IonItem button detail={true} routerLink={'/connect/'+connection.id}>
+        <IonItem button detail={true} routerLink={'/chat/'+connection.id}>
           <IonLabel>
             <h1>{connection.name}</h1>
             <IonNote>{connection.host + ':' + connection.port}
@@ -117,13 +117,9 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
             <IonBadge color={(connection.ssl ? "success" : "danger")} slot="end">
               <Trans>SSL</Trans>
           </IonBadge>
-          {!connection.connected === false ?
+          {!connection.connected === false &&
             <IonBadge color="success" slot="end">
               <Trans>Online</Trans>
-          </IonBadge>
-            :
-            <IonBadge color="danger" slot="end">
-              <Trans>Offline</Trans>
           </IonBadge>
           }
         </IonItem>
@@ -132,7 +128,7 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
             <IonIcon icon={trash}></IonIcon>
           </IonItemOption>
         </IonItemOptions>
-        {connection.connected === false ?
+        {/* {connection.connected === false ?
           <IonItemOptions side="start" onIonSwipe={() => this.establishConnection(connection)}>
             <IonItemOption color="secondary" onClick={() => this.establishConnection(connection)} expandable={true}>
               <Trans>Connect</Trans>
@@ -145,7 +141,7 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
             <Trans>Disconnect</Trans>
           </IonItemOption>
           </IonItemOptions>
-        }
+        } */}
         <IonRippleEffect></IonRippleEffect>
       </IonItemSliding>
     );
@@ -158,7 +154,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = {
-  removeConnection: (connectionId: number) => actions.connection.removeConnection(connectionId),
+  removeConnection: (connection: Connection) => actions.connection.removeConnection(connection),
   saveConnections: (connections: Connection[]) => actions.connection.saveConnections(connections),
   establishConnection: (connection: Connection) => actions.connection.establishConnection(connection),
   quitConnection: (connection: Connection) => actions.connection.quitConnection(connection),

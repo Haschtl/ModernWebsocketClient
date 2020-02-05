@@ -50,6 +50,12 @@ Messageslist {
   flex-direction: row-reverse;
   text-align: right;
 }
+.Messages-message.appMember {
+  /* justify-content: flex-end; */
+  flex-direction: column;
+  text-align: center;
+  font-size: 12px;
+}
 
 .Message-content {
   display: inline-block;
@@ -88,6 +94,9 @@ Messageslist {
   background-color: orangered;
 }
 
+.appMember > .Message-content .text {
+  background-color: transparent;
+}
 
 footer {
 

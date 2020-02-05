@@ -23,6 +23,7 @@
     "Black and White": "Schwarz-Weiss",
     "Medium": "Medium",
     "Dark": "Dunkel",
+    "Settings": "Einstellungen",
     "Add Websocket Server": "Websocket Server hinzufügen",
     "Black-OLED": "Tiefschwarz",
     "Light": "Hell",
@@ -47,7 +48,6 @@
     "Enter the port of the Websocket-Server here (Default-SSL: 443). If the websocket is hosted on a seperate domain, the port should be 80 (without SSL) or 443 (with SSL).": "Geben Sie hier den Port des Websocket-Servers ein (Standard-SSL: 443). Wenn der Websocket auf einer separaten Domain gehostet wird, sollte der Port 80 (ohne SSL) oder 443 (mit SSL) sein.",
     "Decide, if the Server uses SSL-encryption. SSL needs some more configuration. Self-signed cetificates are not allowed in Android (You could maybe install it).": "Entscheiden Sie, ob der Server SSL-Verschlüsselung verwendet. SSL benötigt einige weitere Konfigurationen. Selbstsignierte Zertifikate sind in Android nicht erlaubt (Sie könnten sie vielleicht installieren).",
     "This timeout determines, how long the client waits for an answer. Increase it, If you encounter connectivity problems":"Dieser Timeout bestimmt, wie lange der Client auf eine Antwort wartet. Erhöhen Sie ihn, wenn Sie auf Verbindungsprobleme stoßen",
-    "Go to the connection page, Click the round \"+\"-Button and enter at least a name, a hostname and click on \"Save\"": "Gehen Sie auf die Verbindungsseite, klicken Sie auf die runde \"+\"-Schaltfläche und geben Sie mindestens einen Namen, einen Hostnamen und klicken Sie auf \"Speichern\".",
     "You need to specify a name": "Du musst einen Namen angeben",
     "You need to specify a hostadress": "Du musst eine Hostadresse angeben",
     "Add new connection": "Neue Verbindung anlegen",
@@ -60,5 +60,6 @@
     " fauled.": " fehlgeschlagen.",
     "Enter your message and press ENTER": "Nachricht eingeben und absenden...",
     "It's written in Typescript using Ionic4 with React": "Es ist in Typescript mit Ionic4 mit React geschrieben.",
-    "This is a OpenSource Websocket Client App with SSL support": "Dies ist eine OpenSource-Websocket-Client-Anwendung mit SSL-Unterstützung."
+    "This is a OpenSource Websocket Client App with SSL support": "Dies ist eine OpenSource-Websocket-Client-Anwendung mit SSL-Unterstützung.",
+    "This app works just like a normal \"Chat\"-App. Add a new \"Contact\" with \"+\" and start chatting with the Websocket Server": "Diese App funktioniert wie ein normaler \"Chat\"-App. Füge mit \"+\" einen neuen \"Kontakt\" hinzu und beginne mit dem Websocket Server zu chatten"
 }

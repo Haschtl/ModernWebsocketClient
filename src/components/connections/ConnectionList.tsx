@@ -1,7 +1,7 @@
 import React from 'react';
 import { Connection } from '../../store/connections/types';
 import ConnectionListItem from './ConnectionListItem';
-import { IonList, IonListHeader, IonText, IonCardContent, IonCard, IonButton } from '@ionic/react';
+import { IonList, IonListHeader, IonText, IonCardContent, IonCard } from '@ionic/react';
 import { Trans } from 'react-i18next';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 
-const ConnectionList: React.FunctionComponent<Props> = ({ connections, hidden, history, children }) => {
+const ConnectionList: React.FunctionComponent<Props> = ({ connections, hidden, children }) => {
   if (connections.length === 0) {
     return (
       <>
@@ -25,11 +25,7 @@ const ConnectionList: React.FunctionComponent<Props> = ({ connections, hidden, h
 
       <IonCard>
         <IonCardContent>
-        <IonText><Trans>Seems that you are using this Websocket Client for the first time.</Trans></IonText><br />
-        <IonText><Trans>To learn how to use this app, have a look into the tutorial</Trans></IonText><br />
-        <IonButton fill="outline" color="tertiary" routerLink={'/tutorial'}>
-          <Trans>Show tutorial</Trans>
-        </IonButton>
+        <IonText><Trans>This app works just like a normal "Chat"-App. Add a new "Contact" with "+" and start chatting with the Websocket Server</Trans></IonText>
         </IonCardContent>
       </IonCard>
       </>

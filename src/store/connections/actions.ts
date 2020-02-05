@@ -32,7 +32,7 @@ export const establishConnection = createAction('connect/ESTABLISH_CONNECTION', 
 );
 
 export const removeConnection = createAction('connect/REMOVE_CONNECTION', resolve =>
-  (host: number) => resolve(host)
+  (host: Connection) => resolve(host)
 );
 
 export const quitConnection = createAction('connect/QUIT_CONNECTION', resolve =>
@@ -40,7 +40,7 @@ export const quitConnection = createAction('connect/QUIT_CONNECTION', resolve =>
 );
 
 export const createWebsocket = createAction('connect/CREATE_WEBSOCKET', resolve =>
-  (host?: WebSocket) => resolve(host)
+  (con: Connection, host: WebSocket) => resolve(con, host)
 );
 
 export const setActiveConnection = createAction('connect/SET_ACTIVE_CONNECTION', resolve =>
@@ -48,25 +48,25 @@ export const setActiveConnection = createAction('connect/SET_ACTIVE_CONNECTION',
 );
 
 export const websocketClosed = createAction('connect/WS_CLOSED', resolve =>
-  () => resolve()
+  (host: Connection) => resolve(host)
 );
 
 export const websocketConnection = createAsyncAction(
   'connect/WS_REQUEST',
   'connect/WS_SUCCESS',
   'connect/WS_FAILURE',
-)<void, Connection, Connection>();
+)<Connection, Connection, Connection>();
 
 export const newDataIncoming = createAction('connect/NEW_DATA_INCOMING', resolve =>
-  (data: string) => resolve(data)
+  (con: Connection, data: string) => resolve(con, data)
 );
 
 export const sendWebsocket = createAction('connect/SEND_WEBSOCKET', resolve =>
-  (data: string) => resolve(data)
+  (con: Connection, data: string) => resolve(con, data)
 );
 
 export const clearMessages = createAction('connect/CLEAR_MESSAGES', resolve =>
-  () => resolve()
+  (con: Connection) => resolve(con)
 );
 
 export const setState2 = createAction('connect/SET_STATE2', resolve =>
@@ -74,14 +74,6 @@ export const setState2 = createAction('connect/SET_STATE2', resolve =>
 );
 
 export const clearReducerHistory = createAction('connect/CLEAR_REDUCER_HISTORY', resolve =>
-  () => resolve()
-);
-
-export const stopWaiting = createAction('connect/STOP_WAITING', resolve =>
-  () => resolve()
-);
-
-export const deleteActionPicture = createAction('connect/DELETE_ACTION_PICTURE', resolve =>
   () => resolve()
 );
 
@@ -106,9 +98,5 @@ export const log = createAction('connect/LOG', resolve =>
 );
 
 export const setChatInput = createAction('connect/SET_CHAT_INPUT', resolve =>
-  (text: string | undefined) => resolve(text)
-);
-
-export const clearLog = createAction('connect/CLEAR_LOG', resolve =>
-  () => resolve()
+  (con: Connection, text: string | undefined) => resolve(con, text)
 );

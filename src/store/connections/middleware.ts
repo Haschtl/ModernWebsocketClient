@@ -21,22 +21,24 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
         encoding: FilesystemEncoding.UTF8
       });
       next(connections.fetchConnections.success(JSON.parse(data.data)))
-      cogoToast.success(i18n.t('Config-file has been imported from ')+path)
+      cogoToast.success(i18n.t('Config-file has been imported from ') + path)
     } catch (e) {
       console.error('Unable to read file', e);
-      cogoToast.error(i18n.t('Unable to read config-file. Make sure the file is in ')+path)
+      cogoToast.error(i18n.t('Unable to read config-file. Make sure the file is in ') + path)
     }
   }
   if (action.type === getType(connections.saveConnections)) {
     try {
       console.log('Saving connections to storage')
       for (var i = 0; i < action.payload.length; i++) {
-        if(action.meta !== undefined){if (action.payload[i].id === action.meta.id) {
-          action.payload[i] = action.meta
-        }}
-        action.payload[i].connected = false
+        if (action.meta !== undefined) {
+          if (action.payload[i].id === action.meta.id) {
+            action.payload[i] = action.meta
+          }
+        }
+        // action.payload[i].connected = false
       }
-      
+
       await Storage.set({ key: "websockets", value: JSON.stringify(action.payload) })
     } catch (e) {
       console.error(e)
@@ -57,9 +59,12 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
         var connectionList: Connection[] = a;
         for (i = 0; i < connectionList.length; i++) {
           connectionList[i].connected = false
-          if(connectionList[i].commands === undefined){
-          connectionList[i].commands = []
-        }
+          if (connectionList[i].commands === undefined) {
+            connectionList[i].commands = []
+          }
+          if (connectionList[i].messages === undefined) {
+            connectionList[i].messages = []
+          }
         }
         next(connections.fetchConnections.success(connectionList));
       }
@@ -72,7 +77,7 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
   else if (action.type === getType(connections.setTheme)) {
     try {
       console.log('Saving theme to storage')
-      
+
       await Storage.set({ key: "theme", value: JSON.stringify(action.payload) })
     } catch (e) {
       console.error(e)
@@ -114,18 +119,17 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
 
 
   else if (action.type === getType(connections.quitConnection)) {
-    next(connections.websocketConnection.request());
-    console.log('Closing websocket connection with ' + action.payload)
-    next(connections.createWebsocket(undefined));
+    next(connections.websocketConnection.request(action.payload));
+    console.log('Closing websocket connection with ' + action.payload.name)
+    // next(connections.createWebsocket(action.payload, undefined));
     // }
-    next(connections.websocketClosed());
+    next(connections.websocketClosed(action.payload));
   }
 
 
   else if (action.type === getType(connections.establishConnection)) {
-    next(connections.websocketConnection.request());
+    next(connections.websocketConnection.request(action.payload));
     console.log('Establishing websocket connection with ' + action.payload.name)
-    next(connections.setActiveConnection(action.payload));
     var encrypted = 'ws://'
     if (action.payload.ssl) {
       encrypted = 'wss://'
@@ -136,13 +140,13 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     // websocket onopen event listener
     ws.onopen = () => {
       console.log("connected websocket main component");
-      next(connections.createWebsocket(ws));
+      next(connections.createWebsocket(action.payload, ws));
       next(connections.websocketConnection.success(action.payload));
       // hash = crypto.createHash("sha256").update(action.payload.password, 'utf8').digest('base64')
     };
 
     // websocket onclose event listener
-    ws.onclose = (e:any) => {
+    ws.onclose = (e: any) => {
       console.warn(
         `Socket is closed. Reconnect will be attempted in ${Math.min(
           10000 / 1000,
@@ -155,12 +159,12 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
 
     };
 
-    ws.onmessage = (evt:any) => {
-        next(connections.newDataIncoming(evt.data));
+    ws.onmessage = (evt: any) => {
+      next(connections.newDataIncoming(action.payload, evt.data));
     }
 
     // websocket onerror event listener
-    ws.onerror = (err:any) => {
+    ws.onerror = (err: any) => {
       console.error(
         "Socket encountered error: ",
         err,

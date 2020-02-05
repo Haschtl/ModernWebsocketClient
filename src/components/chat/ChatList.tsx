@@ -1,5 +1,5 @@
 import React from 'react';
-import { Message } from '../../store/connections/types';
+import { Message, Connection } from '../../store/connections/types';
 import { IonList, IonContent, IonListHeader} from '@ionic/react';
 import { Trans } from 'react-i18next';
 import MessageBubbler from './Bubble';
@@ -7,7 +7,8 @@ import MessageBubbler from './Bubble';
 
 
 interface Props {
-  messages: Message[]
+  messages: Message[],
+  connection: Connection
 }
 
 
@@ -50,6 +51,7 @@ class ChatList extends React.Component<Props> {
       <IonList>
     {messages.map((m: Message, idx:number) => (
       <MessageBubbler 
+        connection={this.props.connection}
         message={m} 
         key={'msge'+idx}
         idx={idx} 

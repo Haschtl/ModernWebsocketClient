@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { IonHeader, IonInput, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle } from '@ionic/react';
 import { RootState, actions, selectors } from '../../store';
-import { Connection } from '../../store/connections/types';
+import { Connection, Message, Command } from '../../store/connections/types';
 import { save } from 'ionicons/icons';
 import DescriptionFloater from '../../components/DescriptionFloater';
 import { AlertButton } from '@ionic/react';
@@ -27,8 +27,8 @@ type State = {
   id: number
   ssl: boolean
   info: string
-  eventlevel: -1 | 0 | 1 | 2,
-  accesslevel: 'simple' | 'expert',
+  commands: Command[]
+  messages: Message[]
   showAlert: boolean,
   alertHeader?: string;
   alertMessage?: string;
@@ -46,8 +46,8 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     id: -1,
     ssl: false,
     info: '',
-    eventlevel: 0,
-    accesslevel: 'simple',
+    commands: [],
+    messages: [],
     showAlert: false,
     alertHeader: '',
     alertMessage: undefined,
@@ -77,14 +77,6 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     this.setState({ ...this.state, [key]: event.target.value, 'isEdited': true })
   }
 
-  setEventlevel(num: any) {
-    this.setState({ ...this.state, 'eventlevel': num.detail.value, 'isEdited': true })
-  }
-
-  setAccesslevel(num: any) {
-    this.setState({ ...this.state, 'accesslevel': num.detail.value, 'isEdited': true })
-  }
-
   toggleSSL() {
     this.setState({ ...this.state, 'ssl': !this.state.ssl, 'isEdited': true })
   }
@@ -101,8 +93,6 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       info: this.props.connection.info,
       id: this.props.connection.id,
       ssl: this.props.connection.ssl,
-      eventlevel: this.props.connection.eventlevel,
-      accesslevel: this.props.connection.accesslevel,
       isEdited: false,
       showAlert: false,
       alertHeader: '',
@@ -124,12 +114,11 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         {
           text: this.props.t('Remove'),
           handler: () => {
-            if (this.props.connection === undefined) {
-              return undefined;
+            if (this.props.connection !== undefined) {
+              this.props.removeConnection(this.props.connection);
+              this.props.saveConnections(this.props.connections)
+              this.props.history.push('/connect')
             }
-            this.props.removeConnection(this.props.connection.id);
-            this.props.saveConnections(this.props.connections)
-            this.props.history.push('/connect')
           }
         }
       ]
@@ -147,14 +136,13 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         port: this.state.port,
         timeout: this.state.timeout,
         connected: false,
-        commands: [],
+        commands: this.state.commands,
         info: this.state.info,
         id: this.state.id,
         ssl: this.state.ssl,
         // messages: [],
-        eventlevel: this.state.eventlevel,
-        accesslevel: this.state.accesslevel,
         autoconnect: false,
+        messages: this.state.messages
       }
       this.props.editConnection(con)
       this.props.saveConnections(this.props.connections)
@@ -178,7 +166,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         <IonHeader>
           <IonToolbar>
             <IonButtons slot="start">
-              <IonBackButton defaultHref='/connect' />
+              <IonBackButton defaultHref={'/chat/'+connection.id} />
             </IonButtons>
             <IonTitle>{this.state.name}</IonTitle>
             {this.state.isEdited ?
@@ -304,7 +292,7 @@ const mapStateToProps = (state: RootState, ownProps:RouteComponentProps<{ id: st
 const mapDispatchToProps = {
   establishConnection: (connection: Connection) => actions.connection.establishConnection(connection),
   quitConnection: (connection: Connection) => actions.connection.quitConnection(connection),
-  removeConnection: (connectionId: number) => actions.connection.removeConnection(connectionId),
+  removeConnection: (connection: Connection) => actions.connection.removeConnection(connection),
   editConnection: (connection: Connection) => actions.connection.editConnection(connection),
   saveConnections: (connections: Connection[]) => actions.connection.saveConnections(connections),
   clearReducerHistory: () => actions.connection.clearReducerHistory(),
