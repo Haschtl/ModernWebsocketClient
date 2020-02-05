@@ -1,1 +1,5 @@
 theme: jekyll-theme-slate
+show_downloads: "true"
+github:
+  zip_url: https://drive.google.com/open?id=1uU103UpTB0V5ji9e6_McrTEqoVD_m-NM
+  apk_url: https://drive.google.com/open?id=1uU103UpTB0V5ji9e6_McrTEqoVD_m-NM
