@@ -2,7 +2,7 @@ import React
   from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { IonHeader, IonInput, IonText, IonBadge, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle } from '@ionic/react';
+import { IonHeader, IonInput, IonSelect, IonSelectOption, IonText, IonBadge, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle, IonItemDivider } from '@ionic/react';
 import { RootState, actions, selectors } from '../../store';
 import { Connection, Message, Command } from '../../store/connections/types';
 import { save } from 'ionicons/icons';
@@ -12,6 +12,93 @@ import { AlertButton } from '@ionic/react';
 
 import { Trans } from 'react-i18next';
 import { withTranslation, WithTranslation } from 'react-i18next';
+
+const RTOCCOMMANDS = [
+  { value: '{"getLatest": true}', num: 0 },
+  { value: '{"getSignalList": true}', num: 0 },
+  { value: '{"getEventList": true}', num: 0 },
+  { value: '{"getPluginList": true}', num: 0 },
+  { value: '{"unsubscribeAll": true}', num: 0 },
+  { value: '{"subscribeAll": true}', num: 0 },
+  { value: '{"getSession": true}', num: 0 },
+
+
+  { value: '{"plugin": {"Generator":{"start":true}}}', num: 0 },
+  { value: '{"plugin": {"Generator":{"start":false}}}', num: 0 },
+  { value: '{"plugin": {"Generator":{"autostart":true}}}', num: 0 },
+  { value: '{"plugin": {"Generator":{"samplerate":5}}}', num: 0 },
+  { value: '{"plugin": {"Generator":{"setAmplitude()":[5]}}}', num: 0 },
+
+
+  { value: '{"logger": {"resize":500}}', num: 0 },
+  { value: '{"logger": {"export":["filename","json"]}}', num: 0 },
+  { value: '{"logger": {"export":["filename","xlsx"]}}', num: 0 },
+  { value: '{"logger": {"export":["filename","csv"]}}', num: 0 },
+  { value: '{"logger": {"info":true}}', num: 0 },
+  { value: '{"logger": {"reboot":true}}', num: 0 },
+  { value: '{"logger": {"backup":{"now":true}}}', num: 0 },
+  { value: '{"logger": {"backup":{"resample":0}}}', num: 0 },
+  { value: '{"logger": {"backup":{"interval":1}}}', num: 0 },
+  { value: '{"logger": {"backup":{"active":true}}}', num: 0 },
+  { value: '{"logger": {"backup":{"loadOnOpen":true}}}', num: 0 },
+  { value: '{"logger": {"backup":{"autoIfFull":true}}}', num: 0 },
+  { value: '{"logger": {"backup":{"autoOnClose":true}}}', num: 0 },
+  { value: '{"logger": {"backup":{"clear":true}}}', num: 0 },
+  { value: '{"logger": {"postgresql":{"active":true}}}', num: 0 },
+  { value: '{"logger": {"tcp":{"active":true}}}', num: 0 },
+  { value: '{"logger": {"telegram":{"active":true}}}', num: 0 },
+  { value: '{"logger": {"tcp":{"port":5050}}}', num: 0 },
+  { value: '{"logger": {"global":{"samplerate":10}}}', num: 0 },
+  { value: '{"logger": {"clear":"all"}}', num: 0 },
+  { value: '{"logger": {"clear":"events"}}', num: 0 },
+  { value: '{"logger": {"clear":["Geneator.Square"]}}', num: 0 },
+
+
+  { value: '{"userAction": "myCustomAction"}', num: 0 },
+
+
+  { value: '{"automation": {"setAction":{"name":"Action1","script":"print("Hello"),"active":true,"listenID":["listener1"]}}}', num: 0 },
+  { value: '{"automation": {"setEvent:{"name":"Event1","cond":"Generator.Square>=1","text":"Big square","sname":"Square","dname":"Generator","trigger":"rising","priority":1}}}', num: 0 },
+  { value: '{"automation": {"testAction":"Action1"}}', num: 0 },
+  { value: '{"automation": {"testEvent":"Event1"}}', num: 0 },
+  { value: '{"automation": {"removeAction":"Action1"}}', num: 0 },
+  { value: '{"automation": {"removeEvent":"Event1"}}', num: 0 },
+  { value: '{"automation": {"active":{"events":[],"actions":[]}}}', num: 0 },
+  { value: '{"automation": {"reset":true}}', num: 0 },
+
+
+  { value: '{"getEvent": ["Generator.Square"]}', num: 0 },
+  { value: '{"remove": ["Generator.Square"]}', num: 0 },
+  { value: '{"subscribe": ["signal","Generator.Square"]}', num: 0 },
+  { value: '{"subscribe": ["device","Generator"]}', num: 0 },
+  { value: '{"unsubscribe": ["signal","Generator.Square"]}', num: 0 },
+  { value: '{"unsubscribe": ["device","Generator"]}', num: 0 },
+  { value: '{"getSignal": ["Generator.Square"]}', num: 0 },
+  { value: '{"getSignal": "all"}', num: 0 },
+  { value: '{"getSignal": {"dname":"Generator,"sname":"Square","xmin":0,"xmax":50000000,"database":true,"maxN":100}}', num: 0 },
+  { value: '{"event": {"text":"Example","dname":"Device","sname":"Test", "priority":2}}', num: 0 },
+  { value: '{"y":[1],"sname":["Test"],"dname":"Device","unit":"Bananas"}', num: 0 },
+]
+
+const DENEBCOMMANDS = [
+  { value: 'root:login(COOKIE,app,5)', num: 0 },
+  { value: 'root:logout()', num: 0 },
+  { value: 'root:aliases', num: 0 },
+  { value: 'root:allAliases', num: 0 },
+  { value: 'debug:users', num: 0 },
+  { value: 'debug:USERNAME', num: 0 },
+  { value: 'debug:USERNAME.ALIAS', num: 0 },
+
+  { value: 'deneb-*:engine-1:power:analog=0', num: 0 },
+  { value: 'deneb-*:engine-1:power:analog=10', num: 0 },
+  { value: 'deneb-*:engine-1:power:analog=100', num: 0 },
+  { value: 'deneb-*:engine-1:power:analog=255', num: 0 },
+  { value: 'deneb-*:engine-*:power:analog=255', num: 0 },
+  { value: 'deneb-*:engine-*:power:analog=0', num: 0 },
+  { value: 'deneb-1:websocket:remote-server:multicast:subscribe()', num: 0 },
+  { value: 'deneb-*:websocket:remote-server:multicast:unsubscribe()', num: 0 },
+  { value: 'deneb-*:temperature;', num: 0 },
+]
 
 type Props = RouteComponentProps<{ id: string, tab: string }> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & {
   goBack: () => void
@@ -152,10 +239,22 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       this.props.saveConnections(this.props.connections)
     }
   }
-  removeCommand(value:Command) {
-    if(this.props.connection===undefined){return}
+  removeCommand(value: Command) {
+    if (this.props.connection === undefined) { return }
     this.props.removeCommand(this.props.connection, value)
     this.props.saveConnections(this.props.connections)
+  }
+  setDefaultCommands(num: any) {
+    if (this.props.connection === undefined) { return }
+    var commands = [] as Command[]
+    if (num.detail.value === 0) {
+      commands = [...DENEBCOMMANDS
+      ] as Command[]
+    }
+    else if (num.detail.value === 1) {
+      commands = [...RTOCCOMMANDS] as Command[]
+    }
+    this.props.setCommands(this.props.connection, commands)
   }
 
   render() {
@@ -264,12 +363,25 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
             </IonCardHeader>
 
             <IonCardContent className="ion-padding">
+              <IonItem>
+                <DescriptionFloater
+                  title={this.props.t("Protocol Presets")}
+                  text={<Trans>Select one of the predefined protocols</Trans>}
+                  item={<IonLabel position="floating"><Trans>Protocol Presets</Trans></IonLabel>}
+                  theme={this.props.theme}
+                />
+                <IonSelect onIonChange={(e) => this.setDefaultCommands(e)}>
+                  <IonSelectOption value={0} ><Trans>Crescience Deneb</Trans></IonSelectOption>
+                  <IonSelectOption value={1} ><Trans>RTOC</Trans></IonSelectOption>
+                </IonSelect>
+              </IonItem>
+              <IonItemDivider></IonItemDivider>
               <IonList>
                 {
                   this.props.connection.commands.sort(((a, b) => (
                     b.num - a.num
                   ))).map((value: Command, index: number) => (
-                    <IonItem key={'command'+index} onClick={(e)=>this.removeCommand(value)}>
+                    <IonItem key={'command' + index} onClick={(e) => this.removeCommand(value)}>
                       <IonText>{value.value}</IonText>
                       <IonBadge color="success" slot="end">
                         {value.num}
@@ -345,6 +457,7 @@ const mapDispatchToProps = {
   saveConnections: (connections: Connection[]) => actions.connection.saveConnections(connections),
   clearReducerHistory: () => actions.connection.clearReducerHistory(),
   removeCommand: (connection: Connection, command: Command) => actions.connection.removeCommand(connection, command),
+  setCommands: (connection: Connection, commands: Command[]) => actions.connection.setCommands(connection, commands),
 }
 
 export default connect(

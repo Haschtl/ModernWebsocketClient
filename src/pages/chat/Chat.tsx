@@ -21,6 +21,7 @@ import { } from '@ionic/react';
 
 import { Trans } from 'react-i18next';
 import { withTranslation, WithTranslation } from 'react-i18next';
+import Collapse from '@material-ui/core/Collapse';
 
 import {
   send,
@@ -118,7 +119,7 @@ class Chat extends Component<Props & WithTranslation, State> {
       text = this.props.connection.chatInput
       this.props.setChatInput(this.props.connection, undefined)
     }
-    commands = this.filterCommands(this.props.connection.commands, text, 3);
+    commands = this.filterCommands(this.props.connection.commands, text, 50);
     const connection = this.props.connection
     return (
       <IonPage>
@@ -151,22 +152,26 @@ class Chat extends Component<Props & WithTranslation, State> {
           <ChatList
             connection={this.props.connection}
             messages={this.props.connection.messages}
-          ></ChatList>
+          >
+
+          </ChatList>
         </IonContent>
-        <IonFooter className="Footer" style={{ "color": "transparent" }} >
+        <IonFooter translucent={true} className="Footer">
+          {/* {(this.state.textinput.length > 0 && commands.length > 0) && */}
+          <Collapse in={(this.state.textinput.length > 0 && commands.length > 0)} collapsedHeight={0}>
+            <IonList className={"Recomm"} style={{overflow: "auto", whiteSpace: "nowrap", maxHeight: "30vh"}}>
+              {commands.reverse().map((c: Command, idx: number) => (
+                <IonItem
+                key={'recom' + idx} 
+                style={{textAlign: 'center'}}
+                onClick={() => this.props.setChatInput(connection, c.value)}>
+                  <IonLabel>{c.value}</IonLabel>
+                </IonItem>
+              ))}
+            </IonList>
+            </Collapse>
           {this.props.connection.connected === true ?
             <>
-              {(this.state.textinput.length > 0 && commands.length > 0) &&
-
-                <IonList color='secondary'>
-                  {commands.map((c: Command, idx: number) => (
-                    <IonItem key={'recom' + idx} onClick={() => this.props.setChatInput(connection, c.value)}>
-                      <IonLabel>{c.value}</IonLabel>
-                      {/* <IonLabel>{c.num}</IonLabel> */}
-                    </IonItem>
-                  ))}
-                </IonList>
-              }
               <form onSubmit={e => this.onSubmit(e)}>
                 <input
                   onKeyDown={(e) => this.onKeyDown(e)}

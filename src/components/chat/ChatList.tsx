@@ -42,6 +42,7 @@ class ChatList extends React.Component<Props> {
         </IonListHeader>
         <div id={'house'}></div>
       </IonList>
+      {this.props.children}
       </IonContent>
     );
   }
@@ -59,6 +60,7 @@ class ChatList extends React.Component<Props> {
       </MessageBubbler>
     ))}
     </IonList>
+      {this.props.children}
     </IonContent>
   );
 };}

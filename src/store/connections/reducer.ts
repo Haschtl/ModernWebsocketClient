@@ -179,7 +179,23 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         ...state,
         connections: [...newCon],
       }
-
+    
+    case getType(connections.setCommands):
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
+      }
+      newCon = state.connections
+      // if (curCon.ws !== undefined) {
+      //   curCon.ws.close()
+      // }
+      curCon.commands = action.meta
+      newCon[state.connections.indexOf(curCon)] = curCon
+      return {
+        ...state,
+        connections: [...newCon],
+      }
     case getType(connections.removeCommand):
       curCon = action.payload
       if (curCon === undefined) {

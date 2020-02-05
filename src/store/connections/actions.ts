@@ -23,6 +23,11 @@ export const removeCommand = createAction('connect/REMOVE_COMMAND', resolve =>
   (connection: Connection, command: Command) => resolve(connection, command)
 );
 
+export const setCommands = createAction('connect/SET_COMMANDS', resolve =>
+(connection: Connection, commands: Command[]) => resolve(connection, commands)
+);
+
+
 export const loadConnections = createAction('connect/LOAD_CONNECTIONS', resolve =>
   () => resolve()
 );

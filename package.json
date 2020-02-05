@@ -8,6 +8,7 @@
     "@capacitor/core": "1.4.0",
     "@ionic/react": "^4.11.8",
     "@ionic/react-router": "^4.11.8",
+    "@material-ui/core": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^8.0.3",
