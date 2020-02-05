@@ -7,7 +7,7 @@ export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.0',
+  version: '1.1',
 }
 
 export default (state = connectionDefaultState, action: ActionType<typeof connections>): ConnectionState => {
