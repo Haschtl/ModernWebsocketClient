@@ -61,6 +61,13 @@ Messageslist {
   display: inline-block;
 }
 
+.Message-time {
+  text-align: left;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
 .currentMember > .Message-content {
   align-items: flex-end;
 }

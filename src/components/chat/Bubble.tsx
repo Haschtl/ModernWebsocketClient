@@ -1,15 +1,17 @@
-  import React from 'react';
-  import { connect } from 'react-redux';
-  import { withRouter, RouteComponentProps } from 'react-router';
-  import { actions, RootState } from '../../store';
-  import { Message, Connection } from '../../store/connections/types'
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { actions, RootState } from '../../store';
+import { Message, Connection } from '../../store/connections/types'
+import {
+  IonItemDivider
+} from '@ionic/react';
 
-
-type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & 
+type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> &
 {
-  connection:Connection,
-  message:Message, 
-  idx:number,
+  connection: Connection,
+  message: Message,
+  idx: number,
 };
 
 type MessageState = {
@@ -28,32 +30,39 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
   }
 
   render() {
-    const {member, text, date} = this.props.message;
+    const { member, text, date } = this.props.message;
     const messageFromMe = member.id === -1;
     const messageFromApp = member.id === -2;
     const className = messageFromMe ?
-      "Messages-message currentMember" :  messageFromApp ?
-      "Messages-message appMember" : "Messages-message";
-    var datestring=''
-    if(date !== undefined){
+      "Messages-message currentMember" : messageFromApp ?
+        "Messages-message appMember" : "Messages-message";
+    var datestring = ''
+    var timestring = ''
+    if (date !== undefined) {
       // datestring= '@'+
-      datestring = new Date(date).toLocaleTimeString()
-      
+      timestring = new Date(date).toLocaleTimeString()
+      datestring = new Date(date).toLocaleDateString()
+
     }
-    return (
-      <li className={className} key={'msg'+this.props.idx}>
+    return (<>
+      {this.props.idx % 5 === 0 &&
+        <IonItemDivider sticky style={{textAlign: 'center'}}>
+          <div className="Message-time">{timestring}&nbsp;&nbsp;{datestring}</div>
+        </IonItemDivider>
+      }
+      <li className={className} key={'msg' + this.props.idx}>
         <div className="Message-content">
-        {!messageFromApp ?
-          <><div className="username">
-            {datestring}
-          </div>
-          <div className="text" onClick={() => {this.props.setChatInput(this.props.connection, this.props.message.text)}}>{text}</div>
-        </>
-        :
-        <div className="text">{text} {datestring}</div>
-        }
+          {!messageFromApp ?
+            // <><div className="username">
+            //   {datestring}
+            // </div>
+            <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+            // </>
+            :
+            <div className="text">{text} @{timestring}</div>
+          }
         </div>
-      </li>
+      </li></>
     );
   }
 }
@@ -62,7 +71,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = {
-  setChatInput: (con: Connection, text: string|undefined) => actions.connection.setChatInput(con, text),
+  setChatInput: (con: Connection, text: string | undefined) => actions.connection.setChatInput(con, text),
 };
 
 export default withRouter(connect(

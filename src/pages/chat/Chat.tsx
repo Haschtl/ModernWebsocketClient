@@ -47,24 +47,6 @@ class Chat extends Component<Props & WithTranslation, State> {
     event: undefined,
     // connections: undefined,
   };
-  constructor(props:Props & WithTranslation) {
-    super(props);
-    // console.log(this.props);
-    // this.state = state
- }
-  // shouldComponentUpdate(props:Props, newState:State){
-  //   console.log('Update chat')
-  //   return true
-  // }
-  // componentWillReceiveProps(nextProps:Props) {
-  //   console.log('chat  received props')
-  //     if (this.state.connections !== nextProps.connections) {
-  //         this.setState({
-  //           connections: nextProps.connections,
-  //         });
-  //     }
-  // }
-
   onSubmit(e: React.FormEvent) {
     e.preventDefault()
     this.onSubmit2()
@@ -172,7 +154,7 @@ class Chat extends Component<Props & WithTranslation, State> {
               </div>
             </>
             :
-            <IonButton expand="full" onClick={(e) => (this.connect(e))}>Connect</IonButton>
+            <IonButton expand="full" onClick={(e) => (this.connect(e))}><Trans>Connect</Trans></IonButton>
           }
         </IonFooter>
       </IonPage>
