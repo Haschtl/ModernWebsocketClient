@@ -3,6 +3,7 @@
     "root:logout()",
     "root:aliases",
     "root:allAliases",
+    "root:getCookie(USERNAME, PASSWORD)",
     "debug:users",
     "debug:USERNAME",
     "debug:USERNAME.ALIAS"
