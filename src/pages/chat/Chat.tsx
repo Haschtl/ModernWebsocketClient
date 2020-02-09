@@ -38,6 +38,9 @@ type State = {
   showPopover: boolean;
   event: React.MouseEvent | undefined;
   history_location: number;
+  showPopup: boolean;
+  selectedIdx: number;
+  commands: Command[];
   // connections: Connection[] | undefined;
 };
 
@@ -47,11 +50,15 @@ class Chat extends Component<Props & WithTranslation, State> {
     textinput: '',
     showPopover: false,
     event: undefined,
-    history_location: -1
+    history_location: -1,
+    showPopup: false,
+    selectedIdx: -1,
+    commands: []
     // connections: undefined,
-  };
-  componentDidMount(){
-    if(this.props.connection===undefined){return}
+  }
+
+  componentDidMount() {
+    if (this.props.connection === undefined) { return }
     this.props.setCurrentChat(this.props.connection.id)
   }
   onSubmit(e: React.FormEvent) {
@@ -60,13 +67,30 @@ class Chat extends Component<Props & WithTranslation, State> {
   }
   onSubmit2() {
     if (this.props.connection === undefined) { return }
-    this.setState({ textinput: "", history_location: -1 });
-    this.props.sendWebsocket(this.props.connection, this.state.textinput);
+    var text = this.state.textinput
+
+    if (this.state.selectedIdx>-1){
+      // const commands = this.filterCommands(this.props.connection.commands, this.state.textinput, 50);
+      if(this.state.selectedIdx<this.state.commands.length){
+        // @ts-ignore
+        text = this.state.commands[this.state.selectedIdx].value
+      }
+    }
+    this.props.sendWebsocket(this.props.connection, text);
+    this.setState({ textinput: "", history_location: -1, selectedIdx: -1, showPopup: false });
     // if(this.props.active===undefined){return}
     this.props.saveConnections(this.props.connections, this.props.connection)
   }
   onChange(e: any) {
-    this.setState({ textinput: e.target.value });
+    const text = e.target.value
+    this.setState({ textinput: text });
+    if (this.props.connection === undefined) { return }
+    const commands = this.filterCommands(this.props.connection.commands, text, 50);
+    if (text.length > 0 && commands.length > 0) {
+      this.setState({ showPopup: true, commands: commands })
+    } else {
+      this.setState({ showPopup: false, selectedIdx: -1})
+    }
   }
 
   clearMessages() {
@@ -77,7 +101,7 @@ class Chat extends Component<Props & WithTranslation, State> {
   filterCommands(commands: Command[], searchtext: string, count: number) {
     return commands.filter(comm2 => comm2.value.toLowerCase() !== searchtext.toLowerCase()).filter(comm => comm.value.toLowerCase().indexOf(searchtext.toLowerCase()) !== -1).sort((a, b) => (
       b.num - a.num
-    )).slice(0, count).reverse()
+    )).slice(0, count)
   }
   showMenu(e: React.MouseEvent) {
     e.persist()
@@ -90,37 +114,52 @@ class Chat extends Component<Props & WithTranslation, State> {
   }
   onKeyDown(e: React.KeyboardEvent) {
     if (this.props.connection === undefined) { return }
-    var lastInputs = this.props.connection.messages.filter((value: Message) => {
-      if (value.member.id === -1) {
-        return value
+
+    if (!this.state.showPopup && this.state.selectedIdx===-1 ) {
+      var lastInputs = this.props.connection.messages.filter((value: Message) => {
+        if (value.member.id === -1) {
+          return value
+        }
+        return undefined
+      }).reverse()
+      if (e.keyCode === 38) {
+        if (this.state.history_location < lastInputs.length - 1) {
+          this.setState({ textinput: lastInputs[this.state.history_location + 1].text, history_location: this.state.history_location + 1 });
+        }
       }
-      return undefined
-    }).reverse()
-    if (e.keyCode === 38) {
-      if (this.state.history_location < lastInputs.length-1) {
-        this.setState({ textinput: lastInputs[this.state.history_location + 1].text, history_location: this.state.history_location + 1 });
+      else if (e.keyCode === 40) {
+        if (this.state.history_location >= 1) {
+          this.setState({ textinput: lastInputs[this.state.history_location - 1].text, history_location: this.state.history_location - 1 });
+        } else {
+          this.setState({ textinput: "", history_location: -1 });
+        }
       }
     }
-    else if (e.keyCode === 40) {
-      if (this.state.history_location >= 1) {
-        this.setState({ textinput: lastInputs[this.state.history_location - 1].text, history_location: this.state.history_location - 1 });
-      } else {
-        this.setState({ textinput: "", history_location: -1 });
+    else {
+      // const commands = this.filterCommands(this.props.connection.commands, this.state.textinput, 50);
+      if (e.keyCode === 40 && this.state.selectedIdx < this.state.commands.length-1) {
+        this.setState({ ...this.state, selectedIdx: this.state.selectedIdx + 1 })
+      }
+      else if (e.keyCode === 38 && this.state.selectedIdx >= 0) {
+        this.setState({ ...this.state, selectedIdx: this.state.selectedIdx - 1 })
       }
     }
   }
   render() {
 
     var text = this.state.textinput
-    var commands: Command[] = []
+    // var commands: Command[] = []
     if (this.props.connection === undefined) { return (<></>) }
     if (this.props.connection.chatInput !== undefined) {
       this.setState({ ...this.state, textinput: this.props.connection.chatInput })
       text = this.props.connection.chatInput
       this.props.setChatInput(this.props.connection, undefined)
     }
-    commands = this.filterCommands(this.props.connection.commands, text, 50);
+    // if (this.state.showPopup) {
+    //   commands = this.filterCommands(this.props.connection.commands, text, 50);
+    // }
     const connection = this.props.connection
+    // const showPopup = this.state.textinput.length > 0 && commands.length > 0
     return (
       <IonPage>
         <IonHeader>
@@ -152,24 +191,31 @@ class Chat extends Component<Props & WithTranslation, State> {
           <ChatList
             connection={this.props.connection}
             messages={this.props.connection.messages}
+            autoScroll={this.state.showPopup}
           >
-
           </ChatList>
         </IonContent>
         <IonFooter translucent={true} className="Footer">
           {/* {(this.state.textinput.length > 0 && commands.length > 0) && */}
-          <Collapse in={(this.state.textinput.length > 0 && commands.length > 0)} collapsedHeight={0}>
-            <IonList className={"Recomm"} style={{overflow: "auto", whiteSpace: "nowrap", maxHeight: "30vh"}}>
-              {commands.reverse().map((c: Command, idx: number) => (
-                <IonItem
-                key={'recom' + idx} 
-                style={{textAlign: 'center'}}
-                onClick={() => this.props.setChatInput(connection, c.value)}>
-                  <IonLabel>{c.value}</IonLabel>
-                </IonItem>
-              ))}
+          <Collapse in={this.state.showPopup} collapsedHeight={0}>
+            <IonList className={"Recomm"} style={{ overflow: "auto", whiteSpace: "nowrap", maxHeight: "30vh", minHeight: "30vh" }}>
+              {this.state.commands.map((c: Command, idx: number) => {
+                var col = undefined
+                if (idx === this.state.selectedIdx) {
+                  col = 'secondary'
+                }
+                return (
+                  <IonItem
+                    key={'recom' + idx}
+                    color={col}
+                    style={{ textAlign: 'center' }}
+                    onClick={() => this.props.setChatInput(connection, c.value)}>
+                    <IonLabel>{c.value}</IonLabel>
+                  </IonItem>
+                )
+              })}
             </IonList>
-            </Collapse>
+          </Collapse>
           {this.props.connection.connected === true ?
             <>
               <form onSubmit={e => this.onSubmit(e)}>
@@ -212,7 +258,7 @@ const mapDispatchToProps = {
   clearMessages: (con: Connection) => actions.connection.clearMessages(con),
   setChatInput: (con: Connection, text: string | undefined) => actions.connection.setChatInput(con, text),
   saveConnections: (connections: Connection[], active: Connection) => actions.connection.saveConnections(connections, active),
-  setCurrentChat: (num:number) => actions.connection.setCurrentChat(num),
+  setCurrentChat: (num: number) => actions.connection.setCurrentChat(num),
 };
 
 export default withRouter(connect(

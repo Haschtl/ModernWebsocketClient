@@ -1,0 +1,57 @@
+app:
+  type: app
+  serial: xxxyyyzzz
+  tag: mytag,another tag
+  time:
+    actual-time:  27d:10h:35m:15s
+    ntp-enabled: true
+    ntp-server:  time.cre.science
+    timezone: -6
+    get-time: ()
+  login: (COOKIE,app,5)
+  logout: ()
+  websocket:
+    remote-server:
+      connected: true
+      authenticated: true
+      alias: ""
+      domain: control.cre.science
+      port: 81
+      reconnect-interval: 5000
+      multicast:
+        clients: root,app-1
+        period: 10
+        # add-parameter()
+        # remove-parameter()
+        subscribe: ()
+        unsubscribe: ()
+
+      connect: ()
+      disconnect: ()
+    local-server:
+      alias: deneb-1
+      port: 81
+      clients: 2
+      broadcast-period: 0.1
+  user:
+    name: simon92
+    password: 19pass92
+  firmware:
+    initialized: true
+    automatic-updates-enabled:  true
+    version: 1.0
+    target-version: latest
+    update-server:  update.cre.science
+    polling-period:  3600
+    polling-timeout:  30
+    check-update: ()
+    perform-update: ()
+
+  system:
+    current-errors: 1024,3154,engine1:8754
+    debugging-enabled:  false
+    cpu-usage:
+    ram-usage:
+    parameter-dump: ()
+    clear-errors: ()
+    reboot: ()
