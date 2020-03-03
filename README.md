@@ -1,6 +1,6 @@
 ![](https://github.com/Haschtl/ModernWebsocketClient/blob/master/public/assets/icon/favicon.png)
 
-# OpenSource Websocket Client v1.2
+# OpenSource Websocket Client v1.4
 [Homepage](https://haschtl.github.io/ModernWebsocketClient/)
 [Demo](https://modern-websocket-client.web.app)
 ## Description
@@ -13,8 +13,8 @@
 - Communication-Protocoll
 - Protocoll Presets - Till now hardcoded available: [Crescience Deneb](https://cre.science) and [RTOC](https://haschtl.github.io/RealTimeOpenControl/)
 
-## Example Ionic4 React project
-This app can be seen as an Ionic4 React example, that can be deployed on all available platforms with the following features:
+## Example Ionic5 React project
+This app can be seen as an Ionic5 React example, that can be deployed on all available platforms with the following features:
 - Automatic language detection (with custom translation files)
 - Using storage
 - Using Websocket connections
@@ -30,7 +30,7 @@ I provide platform-specific instructions in this readme below.
 
 ## Setup this project
 
-**Prerequirements**: You need to have Ionic 4 installed
+**Prerequirements**: You need to have Ionic 5 installed
 
 If you want build this Websocket Client by your own, you need to follow these steps:
 

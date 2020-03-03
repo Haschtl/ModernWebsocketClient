@@ -10,7 +10,7 @@ export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.3',
+  version: '1.4',
   protocolPresets: [],
 }
 
@@ -107,7 +107,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       }
       else {
         text = i18n.t('Unhandled error ') + errorEvent.reason
-        cogoToast.info(text)
+        cogoToast.error(text)
         Msg = { member: { id: -2 }, date: date, text: text } as Message;
         curCon.messages = [...curCon.messages, Msg]
       }
@@ -140,8 +140,9 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         curCon.ws.close()
       }
       newCon = state.connections
-      newCon[state.connections.indexOf(curCon)].connected = false
-      newCon[state.connections.indexOf(curCon)].ws = undefined
+      curCon.connected = false
+      curCon.ws = undefined
+      newCon[state.connections.indexOf(curCon)] = curCon
       date = Date.now()
       // Msg = { member: { id: -2 }, date: date, text: "Disconnected" } as Message;
       // newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]

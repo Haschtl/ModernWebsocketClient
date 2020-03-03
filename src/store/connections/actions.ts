@@ -58,10 +58,6 @@ export const createWebsocket = createAction('connect/CREATE_WEBSOCKET', resolve 
   (con: Connection, host: WebSocket) => resolve(con, host)
 );
 
-export const setActiveConnection = createAction('connect/SET_ACTIVE_CONNECTION', resolve =>
-  (host: Connection) => resolve(host)
-);
-
 export const websocketClosed = createAction('connect/WS_CLOSED', resolve =>
   (host: Connection) => resolve(host)
 );

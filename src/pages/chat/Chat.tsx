@@ -37,8 +37,8 @@ type State = {
   textinput: string;
   showPopover: boolean;
   event: React.MouseEvent | undefined;
-  history_location: number;
   showPopup: boolean;
+  history_location: number;
   selectedIdx: number;
   commands: Command[];
   // connections: Connection[] | undefined;
@@ -50,8 +50,8 @@ class Chat extends Component<Props & WithTranslation, State> {
     textinput: '',
     showPopover: false,
     event: undefined,
-    history_location: -1,
     showPopup: false,
+    history_location: -1,
     selectedIdx: -1,
     commands: []
     // connections: undefined,
