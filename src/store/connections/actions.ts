@@ -1,4 +1,4 @@
-import { createAction, createAsyncAction } from 'typesafe-actions';
+import { createCustomAction, createAsyncAction } from 'typesafe-actions';
 import { Connection, Command, Theme, Tutorial } from './types';
 
 export const fetchConnections = createAsyncAction(
@@ -13,103 +13,103 @@ export const fetchProtocols = createAsyncAction(
   'connect/FETCH_PRO_FAILURE'
 )<void, [string, Command[]][], string>();
 
-export const saveConnections = createAction('connect/SAVE_CONNECTIONS', resolve =>
-  (connections: Connection[], active?: Connection) => resolve(connections, active)
+export const saveConnections = createCustomAction('connect/SAVE_CONNECTIONS',
+  (connections: Connection[], active?: Connection) => ({ payload: connections, meta: active })
 );
 
-export const editConnection = createAction('connect/EDIT_CONNECTION', resolve =>
-  (connection: Connection) => resolve(connection)
+export const editConnection = createCustomAction('connect/EDIT_CONNECTION',
+  (connection: Connection) => ({ payload: connection })
 );
 
-export const loadProtocolPresets = createAction('connect/LOAD_PROTOCOL_PRESETS', resolve => 
-  () => resolve()
+export const loadProtocolPresets = createCustomAction('connect/LOAD_PROTOCOL_PRESETS',
+  () => ({})
 );
 
-export const removeCommand = createAction('connect/REMOVE_COMMAND', resolve =>
-  (connection: Connection, command: Command) => resolve(connection, command)
+export const removeCommand = createCustomAction('connect/REMOVE_COMMAND',
+  (connection: Connection, command: Command) => ({ payload: connection, meta: command })
 );
 
-export const setCommands = createAction('connect/SET_COMMANDS', resolve =>
-(connection: Connection, commands: Command[]) => resolve(connection, commands)
+export const setCommands = createCustomAction('connect/SET_COMMANDS',
+  (connection: Connection, commands: Command[]) => ({ payload: connection, meta: commands })
 );
 
 
-export const loadConnections = createAction('connect/LOAD_CONNECTIONS', resolve =>
-  () => resolve()
+export const loadConnections = createCustomAction('connect/LOAD_CONNECTIONS',
+  () => ({})
 );
 
-export const addConnection = createAction('connect/ADD_CONNECTION', resolve =>
-  (connection: Connection) => resolve(connection)
+export const addConnection = createCustomAction('connect/ADD_CONNECTION',
+  (connection: Connection) => ({ payload: connection })
 );
 
-export const establishConnection = createAction('connect/ESTABLISH_CONNECTION', resolve =>
-  (host: Connection) => resolve(host)
+export const establishConnection = createCustomAction('connect/ESTABLISH_CONNECTION',
+  (host: Connection) => ({ payload: host })
 );
 
-export const removeConnection = createAction('connect/REMOVE_CONNECTION', resolve =>
-  (host: Connection) => resolve(host)
+export const removeConnection = createCustomAction('connect/REMOVE_CONNECTION',
+  (host: Connection) => ({ payload: host })
 );
 
-export const quitConnection = createAction('connect/QUIT_CONNECTION', resolve =>
-  (host: Connection) => resolve(host)
+export const quitConnection = createCustomAction('connect/QUIT_CONNECTION',
+  (host: Connection) => ({ payload: host })
 );
 
-export const createWebsocket = createAction('connect/CREATE_WEBSOCKET', resolve =>
-  (con: Connection, host: WebSocket) => resolve(con, host)
+export const createWebsocket = createCustomAction('connect/CREATE_WEBSOCKET',
+  (con: Connection, host: WebSocket) => ({ payload: con, meta: host })
 );
 
-export const websocketClosed = createAction('connect/WS_CLOSED', resolve =>
-  (host: Connection) => resolve(host)
+export const websocketClosed = createCustomAction('connect/WS_CLOSED',
+  (host: Connection) => ({ payload: host })
 );
 
 export const websocketConnection = createAsyncAction(
   'connect/WS_REQUEST',
   'connect/WS_SUCCESS',
   'connect/WS_FAILURE',
-)<Connection, Connection, [Connection,any]>();
+)<Connection, Connection, {con:Connection, meta:any}>();
 
-export const newDataIncoming = createAction('connect/NEW_DATA_INCOMING', resolve =>
-  (con: Connection, data: string) => resolve(con, data)
-);
-
-export const sendWebsocket = createAction('connect/SEND_WEBSOCKET', resolve =>
-  (con: Connection, data: string) => resolve(con, data)
+export const newDataIncoming = createCustomAction('connect/NEW_DATA_INCOMING',
+  (con: Connection, data: string) => ({ payload: con, meta: data })
 );
 
-export const clearMessages = createAction('connect/CLEAR_MESSAGES', resolve =>
-  (con: Connection) => resolve(con)
+export const sendWebsocket = createCustomAction('connect/SEND_WEBSOCKET',
+  (con: Connection, data: string) => ({ payload: con, meta: data })
 );
 
-export const setState2 = createAction('connect/SET_STATE2', resolve =>
-  (data: Object) => resolve(data)
-);
-export const setCurrentChat = createAction('connect/SET_CURRENT_CHAT', resolve =>
-  (data: number) => resolve(data)
-);
-export const clearReducerHistory = createAction('connect/CLEAR_REDUCER_HISTORY', resolve =>
-  () => resolve()
+export const clearMessages = createCustomAction('connect/CLEAR_MESSAGES',
+  (con: Connection) => ({ payload: con })
 );
 
-export const setTheme = createAction('connect/SET_THEME', resolve =>
-  (data: Theme) => resolve(data)
+export const setState2 = createCustomAction('connect/SET_STATE2',
+  (data: Object) => ({ payload: data })
+);
+export const setCurrentChat = createCustomAction('connect/SET_CURRENT_CHAT',
+  (data: number) => ({ payload: data })
+);
+export const clearReducerHistory = createCustomAction('connect/CLEAR_REDUCER_HISTORY',
+  () => ({})
 );
 
-export const setTutorials = createAction('connect/SET_TUTORIALS', resolve =>
-  (data: Tutorial[]) => resolve(data)
+export const setTheme = createCustomAction('connect/SET_THEME',
+  (data: Theme) => ({ payload: data })
 );
 
-export const loadTheme = createAction('connect/LOAD_THEME', resolve =>
-  () => resolve()
+export const setTutorials = createCustomAction('connect/SET_TUTORIALS',
+  (data: Tutorial[]) => ({ payload: data })
 );
 
-export const importConnections = createAction('connect/IMPORT_CONNECTIONS', resolve =>
-  () => resolve()
+export const loadTheme = createCustomAction('connect/LOAD_THEME',
+  () => ({})
 );
 
-export const log = createAction('connect/LOG', resolve =>
-  (log: string) => resolve(log)
+export const importConnections = createCustomAction('connect/IMPORT_CONNECTIONS',
+  () => ({})
 );
 
-export const setChatInput = createAction('connect/SET_CHAT_INPUT', resolve =>
-  (con: Connection, text: string | undefined) => resolve(con, text)
+export const log = createCustomAction('connect/LOG',
+  (log: string) => ({ payload: log })
+);
+
+export const setChatInput = createCustomAction('connect/SET_CHAT_INPUT',
+  (con: Connection, text: string | undefined) => ({ payload: con, meta: text })
 );

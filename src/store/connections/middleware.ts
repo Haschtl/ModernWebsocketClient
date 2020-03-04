@@ -203,7 +203,7 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
 
     // websocket onclose event listener
     ws.onclose = (e: any) => {
-      next(connections.websocketConnection.failure([action.payload, e]));
+      next(connections.websocketConnection.failure({con:action.payload, meta:e}));
     };
 
     ws.onmessage = (evt: any) => {
@@ -212,7 +212,7 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
 
     // websocket onerror event listener
     ws.onerror = (e: any) => {
-      next(connections.websocketConnection.failure([action.payload, e]));
+      next(connections.websocketConnection.failure({con:action.payload, meta:e}));
       ws.close();
     };
   }

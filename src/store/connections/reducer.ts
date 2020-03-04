@@ -80,12 +80,12 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         connections: [...newCon],
       }
     case getType(connections.websocketConnection.failure):
-      curCon = action.payload[0]
+      curCon = action.payload.con
       if (curCon === undefined) {
         console.error('Failed')
         return state;
       }
-      const errorEvent = action.payload[1]
+      const errorEvent = action.payload.meta
       date = Date.now()
       var text = ""
       if (errorEvent.type === 'error') {
