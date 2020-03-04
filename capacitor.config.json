@@ -11,7 +11,8 @@
       "backgroundColor": "#000000" ,
       "androidSplashResourceName": "splash",
       "androidScaleType": "CENTER_CROP",
-      "showSpinner": false
+      "showSpinner": false,
+      "splashFullScreen": true
     },
     "LocalNotifications": {
       "smallIcon": "small_notification_icon"
