@@ -1,0 +1,3 @@
+[submodule ".\\src\\parser"]
+	path = .\\src\\parser
+	url = git@git.kellerbase.de:haschtl/crescience-parser.git
