@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactText } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { actions, RootState } from '../../store';
@@ -7,6 +7,8 @@ import {
   IonItemDivider
 } from '@ionic/react';
 import JSONTree from 'react-json-tree'
+import * as Cres from '../../parser/message';
+import { type } from 'os';
 
 type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> &
 {
@@ -76,6 +78,19 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     else { return undefined }
   }
 
+  shouldExpandNode(keyName:ReactText[], data:any, level:number) {
+    if (typeof(keyName[0]) === "number") {
+      return true
+    }
+    var expanded: string[]= ["commands","path","ret_values"]
+    if (expanded.indexOf(keyName[0])>=0){
+    return true
+  }
+  else {
+    return false
+  }
+  }
+
   render() {
     const { member, text, date } = this.props.message;
     const messageFromMe = member.id === -1;
@@ -94,18 +109,28 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       datestring = new Date(date).toLocaleDateString()
 
     }
-    var json = undefined
+    var json:any= {};
+    // var cmd:any= {};
     if(this.props.connection.beautify===true){
     try {
       json = JSON.parse(text)
     }
     catch{
       try {
-        json = this.cres2json(text)
+        json = new Cres.Message(text, false).toJSON(false,false, true, true, true, true, true, true, false, false)
+        
+        // json.commands.
         // console.log(json)
       }
       catch (e){
-        // console.log(e)
+        console.warn(e)
+        // try {
+        //   json = this.cres2json(text)
+        //   // console.log(json)
+        // }
+        // catch (e){
+        //   // console.log(e)
+        //  }
        }
     }}
     return (<>
@@ -124,6 +149,7 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
               :
               <JSONTree data={json}
                 hideRoot={true}
+                shouldExpandNode={(keyName:ReactText[], data:any, level:number)=>this.shouldExpandNode(keyName,data,level)}
                 theme={{ tree: (style: any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }), }}
               />
           }
