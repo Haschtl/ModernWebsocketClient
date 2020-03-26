@@ -10,7 +10,7 @@ export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.4',
+  version: '1.5',
   protocolPresets: [],
 }
 
