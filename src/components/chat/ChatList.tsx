@@ -65,6 +65,23 @@ class ChatList extends React.Component<Props, State> {
   // scroll(e:CustomEvent) {
   //   console.log(e)
   // }
+  scroll(e: CustomEvent) {
+    // @ts-ignore
+    e.target.getScrollElement()
+      // @ts-ignore
+      .then((currentTime:any) => {
+        if(currentTime.scrollHeight-currentTime.clientHeight-currentTime.scrollTop<=50){
+        this.setState({ ...this.state, isAtEnd: true })
+        }
+        else{
+          this.setState({ ...this.state, isAtEnd: false })
+        }
+      })
+    // console.log(scroller)
+    // setTimeout(() => {
+    // },1000)
+  }
+
   scrollEnd(e: CustomEvent) {
     // @ts-ignore
     e.target.getScrollElement()
@@ -134,8 +151,8 @@ class ChatList extends React.Component<Props, State> {
       <IonContent
         ref={this.contentRef}
         scrollEvents={true}
-        // onIonScroll={(e:CustomEvent) => this.scroll(e)}
-        onIonScrollEnd={(e:CustomEvent) => this.scrollEnd(e)}
+        onIonScroll={(e:CustomEvent) => this.scroll(e)}
+        // onIonScrollEnd={(e:CustomEvent) => this.scrollEnd(e)}
         // onIonScrollStart={(e: CustomEvent) => this.scrollStart(e)}
       >
         <IonInfiniteScroll

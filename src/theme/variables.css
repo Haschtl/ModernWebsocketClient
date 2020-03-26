@@ -67,7 +67,7 @@ Messageslist {
 .Messages-message.currentMember {
   /* justify-content: flex-end; */
   flex-direction: row-reverse;
-  text-align: right;
+  /* text-align: right; */
 }
 .Messages-message.appMember {
   /* justify-content: flex-end; */

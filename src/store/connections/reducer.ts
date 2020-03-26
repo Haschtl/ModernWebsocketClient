@@ -181,9 +181,9 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       date = Date.now()
       Msg = { member: { id: curCon.id, name: curCon.name }, date: date, text: recv } as Message;
       newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
-      if(curCon.id!==state.currentChat){
-        cogoToast.info(i18n.t('Message from ') + curCon.name+':'+recv)
-      }
+      // if(curCon.id!==state.currentChat){
+      //   cogoToast.info(i18n.t('Message from ') + curCon.name+':'+recv)
+      // }
       return {
         ...state,
         connections: [...newCon],

@@ -109,7 +109,7 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       datestring = new Date(date).toLocaleDateString()
 
     }
-    var json:any= {};
+    var json:any= undefined;
     // var cmd:any= {};
     if(this.props.connection.beautify===true){
     try {

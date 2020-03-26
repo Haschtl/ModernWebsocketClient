@@ -1,10 +1,10 @@
 [
-    "root:login(COOKIE,app,5)",
+    "root:login(\"COOKIE\",\"app\",5)",
     "root:logout()",
     "root:aliases",
-    "root:allAliases",
-    "root:getCookie(USERNAME, PASSWORD)",
-    "debug:users",
-    "debug:USERNAME",
-    "debug:USERNAME.ALIAS"
+    "root:all-aliases",
+    "root:disconnected-aliases",
+    "root:get-cookie(\"USERNAME\", \"PASSWORD\")",
+    "root:sniff(\"ALIAS\",\"all\"|\"answer\"|\"send\")",
+    "root:unsniff(\"ALIAS\",\"all\"|\"answer\"|\"send\")"
 ]
