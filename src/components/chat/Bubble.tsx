@@ -8,7 +8,7 @@ import {
 } from '@ionic/react';
 import JSONTree from 'react-json-tree'
 import * as Cres from '../../parser/message';
-import { type } from 'os';
+// import { type } from 'os';
 
 type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> &
 {
