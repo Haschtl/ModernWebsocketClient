@@ -100,6 +100,16 @@ class Chat extends Component<Props & WithTranslation, State> {
     }
   }
 
+  updateCommands() {    
+    if (this.props.connection === undefined) { return }
+    const commands = this.filterCommands(this.props.connection.commands, this.state.textinput, 50);
+    if (this.state.textinput.length > 0 && commands.length > 0) {
+      this.setState({ showPopup: true, commands: commands })
+    } else {
+      this.setState({ showPopup: false, selectedIdx: -1 })
+    }
+  }
+
   clearMessages() {
     if (this.props.connection === undefined) { return }
     this.props.clearMessages(this.props.connection);
@@ -157,7 +167,7 @@ class Chat extends Component<Props & WithTranslation, State> {
     try {
       this.ionItemSlidingRef.current.close();
     }
-    catch { }
+    catch (e){ console.log(e)}
   }
 
   render() {
@@ -220,7 +230,7 @@ class Chat extends Component<Props & WithTranslation, State> {
                   col = 'secondary'
                 }
                 return (
-                  <IonItemSliding ref={this.ionItemSlidingRef} class={'name-' + connection.host}>
+                  <IonItemSliding ref={this.ionItemSlidingRef} class={'name-' + connection.host} key={"command"+idx}>
                     <IonItem
                       key={'recom' + idx}
                       color={col}
@@ -229,13 +239,13 @@ class Chat extends Component<Props & WithTranslation, State> {
                       <IonLabel>{c.value}</IonLabel>
                     </IonItem>
 
-                    <IonItemOptions side="end"  onIonSwipe={() => {this.props.removeCommand(connection, c);this.dismissAlert()}}>
-                      <IonItemOption color="danger" onClick={() => {this.props.removeCommand(connection, c);this.dismissAlert()}} expandable={true}>
+                    <IonItemOptions side="end"  onIonSwipe={() => {this.props.removeCommand(connection, c);this.dismissAlert();this.updateCommands()}}>
+                      <IonItemOption color="danger" onClick={() => {this.props.removeCommand(connection, c);this.dismissAlert();this.updateCommands()}} expandable={true}>
                         <Trans>Remove</Trans>
                       </IonItemOption>
                     </IonItemOptions>
-                    <IonItemOptions side="start" onIonSwipe={() => {this.props.addCommandExecutes(connection, c);this.dismissAlert()}}>
-                      <IonItemOption color="secondary" onClick={() => {this.props.addCommandExecutes(connection, c);this.dismissAlert()}} expandable={true}>
+                    <IonItemOptions side="start" onIonSwipe={() => {this.props.addCommandExecutes(connection, c);this.dismissAlert();this.updateCommands()}}>
+                      <IonItemOption color="secondary" onClick={() => {this.props.addCommandExecutes(connection, c);this.dismissAlert();this.updateCommands()}} expandable={true}>
                         <Trans>Push up</Trans>
                       </IonItemOption>
                     </IonItemOptions>
