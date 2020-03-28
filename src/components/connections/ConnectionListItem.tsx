@@ -12,7 +12,7 @@ import {
   trash,
 } from 'ionicons/icons';
 
-type Props = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & {
+type Props = RouteComponentProps<{ id: string, tab: string }> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & {
   connection: Connection;
   id: number;
 }
@@ -148,8 +148,9 @@ class ConnectionListItem extends React.PureComponent<Props & WithTranslation, St
   }
 }
 
-const mapStateToProps = (state: RootState) => ({
+const mapStateToProps = (state: RootState, ownProps: RouteComponentProps<{ id: string, tab: string }>) => ({
   connections: state.connections.connections,
+  // connection: selectors.connection.connectionByID(state.connections.connections, parseInt(ownProps.match.params.id, 10)),
   reducerHistory: state.connections.history
 });
 

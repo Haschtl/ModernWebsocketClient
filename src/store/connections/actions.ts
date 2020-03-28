@@ -29,6 +29,10 @@ export const removeCommand = createCustomAction('connect/REMOVE_COMMAND',
   (connection: Connection, command: Command) => ({ payload: connection, meta: command })
 );
 
+export const addCommandExecutes = createCustomAction('connect/ADD_COMMAND_EXECUTES',
+  (connection: Connection, command: Command, num: number) => ({ payload: connection, meta: command, num:num })
+);
+
 export const setCommands = createCustomAction('connect/SET_COMMANDS',
   (connection: Connection, commands: Command[]) => ({ payload: connection, meta: commands })
 );

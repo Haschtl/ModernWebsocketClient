@@ -10,7 +10,7 @@ export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.5',
+  version: '1.5.1',
   protocolPresets: [],
 }
 
@@ -180,7 +180,10 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       const recv: any = action.meta
       date = Date.now()
       Msg = { member: { id: curCon.id, name: curCon.name }, date: date, text: recv } as Message;
-      newCon[state.connections.indexOf(curCon)].messages = [...curCon.messages, Msg]
+      newCon[state.connections.indexOf(curCon)].messages.push(Msg)
+      if (newCon[state.connections.indexOf(curCon)].messages.length >= 100){
+        newCon[state.connections.indexOf(curCon)].messages.slice(newCon[state.connections.indexOf(curCon)].messages.length-80,newCon[state.connections.indexOf(curCon)].messages.length)
+      }
       // if(curCon.id!==state.currentChat){
       //   cogoToast.info(i18n.t('Message from ') + curCon.name+':'+recv)
       // }
@@ -205,6 +208,22 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         ...state,
         connections: [...newCon],
       }
+    case getType(connections.addCommandExecutes):
+        curCon = action.payload
+        if (curCon === undefined) {
+          console.error('Failed')
+          return state;
+        }
+        newCon = state.connections
+        // if (curCon.ws !== undefined) {
+        //   curCon.ws.close()
+        // }
+        curCon.commands[curCon.commands.indexOf(action.meta)].num += action.num
+        newCon[state.connections.indexOf(curCon)] = curCon
+        return {
+          ...state,
+          connections: [...newCon],
+        }
     case getType(connections.removeCommand):
       curCon = action.payload
       if (curCon === undefined) {

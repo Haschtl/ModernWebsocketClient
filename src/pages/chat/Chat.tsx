@@ -9,7 +9,8 @@ import {
   IonTitle,
   IonIcon,
   IonButton,
-  IonItem, IonList, IonLabel, IonPopover
+  IonItem, IonList, IonLabel, IonPopover,
+  IonItemSliding, IonItemOptions, IonItemOption
 } from '@ionic/react';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -46,6 +47,7 @@ type State = {
 
 
 class Chat extends Component<Props & WithTranslation, State> {
+  ionItemSlidingRef: React.RefObject<any>
   state = {
     textinput: '',
     showPopover: false,
@@ -55,6 +57,11 @@ class Chat extends Component<Props & WithTranslation, State> {
     selectedIdx: -1,
     commands: []
     // connections: undefined,
+  }
+
+  constructor(props: Props & WithTranslation) {
+    super(props);
+    this.ionItemSlidingRef = React.createRef();
   }
 
   componentDidMount() {
@@ -69,9 +76,9 @@ class Chat extends Component<Props & WithTranslation, State> {
     if (this.props.connection === undefined) { return }
     var text = this.state.textinput
 
-    if (this.state.selectedIdx>-1){
+    if (this.state.selectedIdx > -1) {
       // const commands = this.filterCommands(this.props.connection.commands, this.state.textinput, 50);
-      if(this.state.selectedIdx<this.state.commands.length){
+      if (this.state.selectedIdx < this.state.commands.length) {
         // @ts-ignore
         text = this.state.commands[this.state.selectedIdx].value
       }
@@ -89,7 +96,7 @@ class Chat extends Component<Props & WithTranslation, State> {
     if (text.length > 0 && commands.length > 0) {
       this.setState({ showPopup: true, commands: commands })
     } else {
-      this.setState({ showPopup: false, selectedIdx: -1})
+      this.setState({ showPopup: false, selectedIdx: -1 })
     }
   }
 
@@ -115,7 +122,7 @@ class Chat extends Component<Props & WithTranslation, State> {
   onKeyDown(e: React.KeyboardEvent) {
     if (this.props.connection === undefined) { return }
 
-    if (!this.state.showPopup && this.state.selectedIdx===-1 ) {
+    if (!this.state.showPopup && this.state.selectedIdx === -1) {
       var lastInputs = this.props.connection.messages.filter((value: Message) => {
         if (value.member.id === -1) {
           return value
@@ -137,7 +144,7 @@ class Chat extends Component<Props & WithTranslation, State> {
     }
     else {
       // const commands = this.filterCommands(this.props.connection.commands, this.state.textinput, 50);
-      if (e.keyCode === 40 && this.state.selectedIdx < this.state.commands.length-1) {
+      if (e.keyCode === 40 && this.state.selectedIdx < this.state.commands.length - 1) {
         this.setState({ ...this.state, selectedIdx: this.state.selectedIdx + 1 })
       }
       else if (e.keyCode === 38 && this.state.selectedIdx >= 0) {
@@ -145,6 +152,14 @@ class Chat extends Component<Props & WithTranslation, State> {
       }
     }
   }
+  
+  dismissAlert = () => {
+    try {
+      this.ionItemSlidingRef.current.close();
+    }
+    catch { }
+  }
+
   render() {
 
     var text = this.state.textinput
@@ -205,13 +220,26 @@ class Chat extends Component<Props & WithTranslation, State> {
                   col = 'secondary'
                 }
                 return (
-                  <IonItem
-                    key={'recom' + idx}
-                    color={col}
-                    style={{ textAlign: 'center' }}
-                    onClick={() => this.props.setChatInput(connection, c.value)}>
-                    <IonLabel>{c.value}</IonLabel>
-                  </IonItem>
+                  <IonItemSliding ref={this.ionItemSlidingRef} class={'name-' + connection.host}>
+                    <IonItem
+                      key={'recom' + idx}
+                      color={col}
+                      style={{ textAlign: 'center' }}
+                      onClick={() => this.props.setChatInput(connection, c.value)}>
+                      <IonLabel>{c.value}</IonLabel>
+                    </IonItem>
+
+                    <IonItemOptions side="end"  onIonSwipe={() => {this.props.removeCommand(connection, c);this.dismissAlert()}}>
+                      <IonItemOption color="danger" onClick={() => {this.props.removeCommand(connection, c);this.dismissAlert()}} expandable={true}>
+                        <Trans>Remove</Trans>
+                      </IonItemOption>
+                    </IonItemOptions>
+                    <IonItemOptions side="start" onIonSwipe={() => {this.props.addCommandExecutes(connection, c);this.dismissAlert()}}>
+                      <IonItemOption color="secondary" onClick={() => {this.props.addCommandExecutes(connection, c);this.dismissAlert()}} expandable={true}>
+                        <Trans>Push up</Trans>
+                      </IonItemOption>
+                    </IonItemOptions>
+                  </IonItemSliding>
                 )
               })}
             </IonList>
@@ -259,6 +287,8 @@ const mapDispatchToProps = {
   setChatInput: (con: Connection, text: string | undefined) => actions.connection.setChatInput(con, text),
   saveConnections: (connections: Connection[], active: Connection) => actions.connection.saveConnections(connections, active),
   setCurrentChat: (num: number) => actions.connection.setCurrentChat(num),
+  removeCommand: (connection: Connection, command: Command) => actions.connection.removeCommand(connection, command),
+  addCommandExecutes: (connection: Connection, command: Command) => actions.connection.addCommandExecutes(connection, command, 10),
 };
 
 export default withRouter(connect(
