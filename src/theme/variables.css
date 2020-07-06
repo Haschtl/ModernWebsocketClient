@@ -85,18 +85,24 @@ Messageslist {
   align-items: flex-end;
 }
 
+.date { 
+  background-color: transparent !important;
+  opacity: 0.5;
+  font-size: smaller;
+}
 .Message-content > .text {
   padding: 10px;
   max-width: 400px;
   margin: 0;
   border-radius: 12px;
-  background-color: cornflowerblue;
-  color: white;
+  background-color: var(--it-background,cornflowerblue);
+  color: var(--it-text,white);
   display: inline-block;
 }
 
 .currentMember > .Message-content .text {
-  background-color: orangered;
+  background-color: var(--me-background,orangered);
+  color: var(--me-text,white);
 }
 
 .Recomm {
@@ -105,13 +111,13 @@ Messageslist {
 .CurrentJsonMember {
   background-color: transparent;
   align-items: flex-end;
-  border-top: 1px solid orangered;
-  border-bottom: 1px solid orangered;
+  border-top: 1px solid var(--me-border,orangered);
+  border-bottom: 1px solid var(--me-bottom,orangered);
 }
 .JsonMember {
   background-color: transparent;
-  border-top: 1px solid cornflowerblue;
-  border-bottom: 1px solid cornflowerblue;
+  border-top: 1px solid var(--it-border,cornflowerblue);
+  border-bottom: 1px solid var(--it-border,cornflowerblue);
 }
 
 .appMember > .Message-content .text {
@@ -120,6 +126,12 @@ Messageslist {
 
 
 :root {
+  --me-background: #d88167;
+  --me-border: #c28e61;
+  --me-text: #000000;
+  --it-background: #6ecc6b;
+  --it-border: #123456;
+  --it-text: #000000;
   --ion-color-angular: #ac282b;
   --ion-color-communication: #8e8d93;
   --ion-color-tooling: #fe4c52;
@@ -306,6 +318,9 @@ Messageslist {
 }
 
 
+ion-backdrop{
+  width: 100vw !important;
+}
 /* Action suggestions */
 .my-textarea {
   font-size: 20px;

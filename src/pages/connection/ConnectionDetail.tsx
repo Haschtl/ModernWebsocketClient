@@ -56,7 +56,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     alertHeader: '',
     alertMessage: undefined,
     alertButtons: [],
-    beautify: true
+    beautify: false
   }
 
   constructor(props: Props & WithTranslation) {
@@ -267,7 +267,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                 </IonItem>
                 <IonItem>
                   <DescriptionFloater
-                    title={this.props.t("Password")}
+                    title={this.props.t("Password (-> Github-repo)")}
                     text={<Trans>Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.</Trans>}
                     item={<IonLabel position="floating"><Trans>Password</Trans></IonLabel>}
                     theme={this.props.theme}

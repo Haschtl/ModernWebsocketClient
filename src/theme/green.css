@@ -1,5 +1,11 @@
 
 .green-theme {
+  --me-background: #41bd6a;
+  --me-border: #3d2815;
+  --me-text: #000000;
+  --it-background: #36a532;
+  --it-border: #123456;
+  --it-text: #000000;
     --ion-color-angular: #28ac50;
     --ion-color-communication: #8e8d93;
     --ion-color-tooling: #4cfeba;

@@ -1,5 +1,11 @@
 
 .blackwhite-theme {
+  --me-background: #363636;
+  --me-border: #3d2815;
+  --me-text: #ffffff;
+  --it-background: #6e6e6e;
+  --it-border: #123456;
+  --it-text: #ffffff;
     --ion-item-background-activated: #ffffff;
     --ion-item-background: #000000;
     --ion-item-text-activated: #000000;

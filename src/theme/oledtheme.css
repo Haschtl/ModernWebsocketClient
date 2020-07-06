@@ -1,5 +1,11 @@
 
 .oled-theme {
+  --me-background: #1d1b10;
+  --me-border: #3d2815;
+  --me-text: #ffffff;
+  --it-background: #2b1915;
+  --it-border: #123456;
+  --it-text: #ffffff;
     --ion-item-background-activated: #000000;
     --ion-item-background: #000000;
     --ion-item-border-color: #0e0e0e;
@@ -96,9 +102,17 @@
     --ion-color-step-850: #dbdbdb;
     --ion-color-step-900: #e7e7e7;
     --ion-color-step-950: #f3f3f3;
+    
   }
   
   input {
     background-color: black;
     color: white;
   }
+
+  
+/* .text { 
+  background-color: transparent !important;
+  opacity: 0.5;
+  font-size: smaller;
+} */

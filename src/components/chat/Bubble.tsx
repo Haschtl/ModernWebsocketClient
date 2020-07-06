@@ -145,8 +145,15 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
             <div className="text">{text} @{timestring}</div>
             :
             json === undefined ?
-              <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+            <>{!messageFromMe? 
+              <><div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+              <div className="date text">{timestring}</div>
+              </>
               :
+              <><div className="date text">{timestring}</div>
+              <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+              </>
+            }</>:
               <JSONTree data={json}
                 hideRoot={true}
                 shouldExpandNode={(keyName:ReactText[], data:any, level:number)=>this.shouldExpandNode(keyName,data,level)}

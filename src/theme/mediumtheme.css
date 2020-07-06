@@ -1,5 +1,11 @@
 
 .medium-theme {
+  --me-background: #6b5825;
+  --me-border: #3d2815;
+  --me-text: #ccccc4;
+  --it-background: #75402f;
+  --it-border: #123456;
+  --it-text: #dacccc;
     --ion-item-background-activated: rgb(100, 100, 100);
     --ion-item-background: rgb(70, 70, 70);
     --ion-tab-bar-background: #000000;

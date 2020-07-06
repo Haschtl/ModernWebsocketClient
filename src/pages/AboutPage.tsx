@@ -87,7 +87,7 @@ class AboutPage extends PureComponent<Props & WithTranslation> {
           </IonGrid>
           <IonCard><IonCardContent>
             <IonText><Trans>This is a OpenSource Websocket Client App with SSL support</Trans> v{this.props.version}<br></br>
-              <Trans>It's written in Typescript using Ionic4 with React</Trans>
+              <Trans>It's written in Typescript using Ionic5 with React</Trans>
             </IonText>
           </IonCardContent>
           </IonCard>

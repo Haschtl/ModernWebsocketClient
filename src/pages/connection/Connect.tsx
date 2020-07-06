@@ -48,6 +48,10 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
       cogoToast.error(this.props.t('You need to specify a hostadress'))
       return
     }
+    if (data.host+"".startsWith("ws://") === true || data.host+"".startsWith("wss://") === true) {
+      cogoToast.error(this.props.t('The hostname must not contain "ws://" or "wss://". SSL or not can be configured afterwards and is automatically enabled on port 443.'))
+      return
+    }
     var useSSL = false
     if (data.ssl) {
       useSSL = true
@@ -90,6 +94,7 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
           isOpen={this.state.showCreateNewAlert}
           onDidDismiss={() => this.setState(() => ({ showCreateNewAlert: false }))}
           header={this.props.t('Add new connection')}
+          // subHeader={this.props.t('Enter a hostname without "ws://" or "wss://".')}
           inputs={[
             {
               label: this.props.t('Name'),
@@ -98,11 +103,11 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
               placeholder: this.props.t('Name'),
             },
             {
-              label: this.props.t('Host'),
+              label: this.props.t('Hostname (w.o. wss:// or ws://)'),
               name: 'host',
               type: 'text',
               id: 'hostId',
-              placeholder: this.props.t('Host'),
+              placeholder: this.props.t('Host (echo.websocket.org)'),
             },
             {
               label: this.props.t('Port'),
@@ -110,7 +115,7 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
               type: 'number',
               id: 'portId',
               value: 443,
-              placeholder: this.props.t('443 (default-SSL)'),
+              placeholder: this.props.t('443'),
             },
           ]}
           buttons={[
