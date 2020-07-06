@@ -73,7 +73,7 @@ export const websocketConnection = createAsyncAction(
 )<Connection, Connection, {con:Connection, meta:any}>();
 
 export const newDataIncoming = createCustomAction('connect/NEW_DATA_INCOMING',
-  (con: Connection, data: any) => ({ payload: con, meta: data })
+  (con: Connection, msg: MessageEvent) => ({ payload: con, meta: msg })
 );
 
 export const sendWebsocket = createCustomAction('connect/SEND_WEBSOCKET',

@@ -4,6 +4,8 @@ import { ConnectionState, Connection, Message, Command } from './types';
 import * as crypto from '../encryption'
 import * as cogoToast from '../../components/CustomToasts';
 import i18n from '../../i18n';
+import { read } from 'fs';
+import { type } from 'os';
 
 
 export const connectionDefaultState: ConnectionState = {
@@ -27,11 +29,11 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         ...state,
         connections: action.payload
       }
-      case getType(connections.fetchProtocols.success):
-        return {
-          ...state,
-          protocolPresets: action.payload
-        }
+    case getType(connections.fetchProtocols.success):
+      return {
+        ...state,
+        protocolPresets: action.payload
+      }
     case getType(connections.fetchConnections.failure):
       return {
         ...state,
@@ -47,8 +49,10 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
       action.payload.id = newId
 
       state.connections.push(action.payload)
-      return {...state,
-        connections: [...state.connections]};;
+      return {
+        ...state,
+        connections: [...state.connections]
+      };;
     case getType(connections.removeConnection):
       con = state.connections.find(e => e.id === action.payload.id);
       if (con === undefined) {
@@ -56,8 +60,10 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         return state;
       }
       state.connections.splice(state.connections.indexOf(con), 1)
-      return {...state,
-        connections: [...state.connections]};
+      return {
+        ...state,
+        connections: [...state.connections]
+      };
     case getType(connections.editConnection):
       con = state.connections.find(e => e.id === action.payload.id);
       if (con === undefined) {
@@ -101,7 +107,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         }
         else {
           cogoToast.info(i18n.t('Connection with ') + curCon.name + i18n.t(' closed.') + ' (' + errorEvent.code + ')')
-          Msg = { member: { id: -2 }, date: date, text: i18n.t('Disconnected')+' ('+errorEvent.code+')' } as Message;
+          Msg = { member: { id: -2 }, date: date, text: i18n.t('Disconnected') + ' (' + errorEvent.code + ')' } as Message;
           curCon.messages = [...curCon.messages, Msg]
         }
       }
@@ -170,19 +176,87 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         return state;
       }
 
+      var recv: MessageEvent = action.meta
+      var readable_text: string | DataView = ""
+      var typ = "string"
+      if (typeof (recv.data) == "string") {
+        readable_text = recv.data
+      }
+      else {
+        typ = "binary"
+        console.log(recv.data)
+        // const reader = new FileReader();
+        // reader.readAsArrayBuffer(recv.data);
+        // reader.onloadend = (event) => {
+        //     // The contents of the BLOB are in reader.result:
+        //     console.log(reader.result);
+        // }
+        var dv = new DataView(recv.data);
+        var bin: any;
+        // console.log(curCon)
+        switch (curCon.binaryType) {
+          case "int8":
+            bin = new Int8Array(dv.buffer)
+            readable_text = dv.getInt8(curCon.binaryOffset) + ""
+            break;
+          case "uint8":
+            bin = new Uint8Array(dv.buffer)
+            readable_text = dv.getUint8(curCon.binaryOffset) + ""
+            break;
+          case "int16":
+            bin = new Int16Array(dv.buffer)
+            readable_text = dv.getInt16(curCon.binaryOffset) + ""
+            break;
+          case "uint16":
+            bin = new Uint16Array(dv.buffer)
+            readable_text = dv.getUint16(curCon.binaryOffset) + ""
+            break;
+          case "int32":
+            bin = new Int32Array(dv.buffer)
+            readable_text = dv.getInt32(curCon.binaryOffset) + ""
+            break;
+          case "uint32":
+            bin = new Uint32Array(dv.buffer)
+            readable_text = dv.getUint32(curCon.binaryOffset) + ""
+            break;
+          case "bigint64":
+            bin = new BigInt64Array(dv.buffer)
+            readable_text = dv.getBigInt64(curCon.binaryOffset) + ""
+            break;
+          case "biguint64":
+            bin = new BigUint64Array(dv.buffer)
+            readable_text = dv.getBigUint64(curCon.binaryOffset) + ""
+            break;
+          case "float32":
+            bin = new Float32Array(dv.buffer)
+            readable_text = dv.getFloat32(curCon.binaryOffset) + ""
+            break;
+          case "float64":
+            bin = new Float64Array(dv.buffer)
+            readable_text = dv.getFloat64(curCon.binaryOffset) + ""
+            break;
+          default:
+            bin = "Cannot receive Binary-data. No binary-type configured. Please select one in the Connection-Settings"
+            break;
+        }
+        readable_text = bin+""
+        // console.log(String.fromCharCode.apply(null,bin))
+        // console.log(bin+"")
+      }
       if (action.payload.password !== '') {
-        const message = crypto.decryptStr(action.meta, action.payload.password)
+        const message = crypto.decryptStr(action.meta.data, action.payload.password)
         if (message !== undefined && message !== false) {
-          action.meta = message
+          // action.meta.data = message
+          readable_text = message
         }
       }
+      // recv = action.meta
       newCon = state.connections
-      const recv: any = action.meta
       date = Date.now()
-      Msg = { member: { id: curCon.id, name: curCon.name }, date: date, text: recv } as Message;
+      Msg = { member: { id: curCon.id, name: curCon.name }, date: date, typ: typ, text: readable_text } as Message;
       newCon[state.connections.indexOf(curCon)].messages.push(Msg)
-      if (newCon[state.connections.indexOf(curCon)].messages.length >= 100){
-        newCon[state.connections.indexOf(curCon)].messages.slice(newCon[state.connections.indexOf(curCon)].messages.length-80,newCon[state.connections.indexOf(curCon)].messages.length)
+      if (newCon[state.connections.indexOf(curCon)].messages.length >= 100) {
+        newCon[state.connections.indexOf(curCon)].messages.slice(newCon[state.connections.indexOf(curCon)].messages.length - 80, newCon[state.connections.indexOf(curCon)].messages.length)
       }
       // if(curCon.id!==state.currentChat){
       //   cogoToast.info(i18n.t('Message from ') + curCon.name+':'+recv)
@@ -191,7 +265,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         ...state,
         connections: [...newCon],
       }
-    
+
     case getType(connections.setCommands):
       curCon = action.payload
       if (curCon === undefined) {
@@ -209,21 +283,21 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         connections: [...newCon],
       }
     case getType(connections.addCommandExecutes):
-        curCon = action.payload
-        if (curCon === undefined) {
-          console.error('Failed')
-          return state;
-        }
-        newCon = state.connections
-        // if (curCon.ws !== undefined) {
-        //   curCon.ws.close()
-        // }
-        curCon.commands[curCon.commands.indexOf(action.meta)].num += action.num
-        newCon[state.connections.indexOf(curCon)] = curCon
-        return {
-          ...state,
-          connections: [...newCon],
-        }
+      curCon = action.payload
+      if (curCon === undefined) {
+        console.error('Failed')
+        return state;
+      }
+      newCon = state.connections
+      // if (curCon.ws !== undefined) {
+      //   curCon.ws.close()
+      // }
+      curCon.commands[curCon.commands.indexOf(action.meta)].num += action.num
+      newCon[state.connections.indexOf(curCon)] = curCon
+      return {
+        ...state,
+        connections: [...newCon],
+      }
     case getType(connections.removeCommand):
       curCon = action.payload
       if (curCon === undefined) {
@@ -287,7 +361,7 @@ export default (state = connectionDefaultState, action: ActionType<typeof connec
         try {
           var message = action.meta;
           const date = Date.now()
-          const Msg = { member: { id: -1, name: 'Me' }, date: date, text: message } as Message;
+          const Msg = { member: { id: -1, name: 'Me' }, date: date, text: message, typ: "string" } as Message;
 
           var found = false;
           for (var c in curCon.commands) {

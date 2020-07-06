@@ -44,6 +44,7 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
       await Storage.set({ key: "websockets", value: JSON.stringify(action.payload) })
     } catch (e) {
       console.error(e)
+      console.log("Saving failed")
       next(connections.fetchConnections.failure(e));
     }
   }
@@ -188,6 +189,8 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     // var options = {rejectUnauthorized: false};
     var url = encrypted + action.payload.host + ':' + action.payload.port;
     var ws = new WebSocket(url);
+    ws.binaryType = 'arraybuffer';
+    // ws.binaryType = 'blob';
     // websocket onopen event listener
     ws.onopen = () => {
       console.log("connected websocket main component");
@@ -207,7 +210,8 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     };
 
     ws.onmessage = (evt: MessageEvent) => {
-      next(connections.newDataIncoming(action.payload, evt.data));
+      // console.log(evt)
+      next(connections.newDataIncoming(action.payload, evt));
     }
 
     // websocket onerror event listener

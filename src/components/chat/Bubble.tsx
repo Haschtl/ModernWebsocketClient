@@ -50,49 +50,52 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     }
     else if (strsplit.length === 1) {
       var strsplit2 = str.split(':')
-      strsplit2 = [strsplit2[0],strsplit2.slice(1,strsplit2.length).join(':')]
-      
+      strsplit2 = [strsplit2[0], strsplit2.slice(1, strsplit2.length).join(':')]
+
       if (strsplit2.length === 2) {
         // console.log(strsplit2)
         // console.log(strsplit2[1].split('='))
-        if(strsplit2[1].indexOf('(')>=0){
-          return { "target": strsplit2[0], 
-          "call": strsplit2[1].slice(0,strsplit2[1].indexOf('(')),
-          "arguments": strsplit2[1].slice(strsplit2[1].indexOf('(')+1,strsplit2[1].indexOf(')')+1-strsplit2[1].indexOf('(')).split(',')
+        if (strsplit2[1].indexOf('(') >= 0) {
+          return {
+            "target": strsplit2[0],
+            "call": strsplit2[1].slice(0, strsplit2[1].indexOf('(')),
+            "arguments": strsplit2[1].slice(strsplit2[1].indexOf('(') + 1, strsplit2[1].indexOf(')') + 1 - strsplit2[1].indexOf('(')).split(',')
           }
         }
-        else if(strsplit2[1].split('=').length>=2){
-          return { "target": strsplit2[0], 
-          "set": strsplit2[1].slice(0,strsplit2[1].indexOf('=')), 
-          "value": strsplit2[1].slice(strsplit2[1].indexOf('=')+1,strsplit2[1].length)}
+        else if (strsplit2[1].split('=').length >= 2) {
+          return {
+            "target": strsplit2[0],
+            "set": strsplit2[1].slice(0, strsplit2[1].indexOf('=')),
+            "value": strsplit2[1].slice(strsplit2[1].indexOf('=') + 1, strsplit2[1].length)
+          }
         }
-        else if(strsplit2[1].indexOf(':')>=0){
-          return { "target": strsplit2[0], "get": strsplit2[1]}
+        else if (strsplit2[1].indexOf(':') >= 0) {
+          return { "target": strsplit2[0], "get": strsplit2[1] }
         }
-        else{return undefined}
+        else { return undefined }
       }
-      else{
+      else {
         return undefined
       }
     }
     else { return undefined }
   }
 
-  shouldExpandNode(keyName:ReactText[], data:any, level:number) {
-    if (typeof(keyName[0]) === "number") {
+  shouldExpandNode(keyName: ReactText[], data: any, level: number) {
+    if (typeof (keyName[0]) === "number") {
       return true
     }
-    var expanded: string[]= ["commands","path","ret_values"]
-    if (expanded.indexOf(keyName[0])>=0){
-    return true
-  }
-  else {
-    return false
-  }
+    var expanded: string[] = ["commands", "path", "ret_values"]
+    if (expanded.indexOf(keyName[0]) >= 0) {
+      return true
+    }
+    else {
+      return false
+    }
   }
 
   render() {
-    const { member, text, date } = this.props.message;
+    var { member, typ, text, date } = this.props.message;
     const messageFromMe = member.id === -1;
     const messageFromApp = member.id === -2;
     const className = messageFromMe ?
@@ -109,30 +112,47 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
       datestring = new Date(date).toLocaleDateString()
 
     }
-    var json:any= undefined;
+    var json: any = undefined;
     // var cmd:any= {};
-    if(this.props.connection.beautify===true){
-    try {
-      json = JSON.parse(text)
-    }
-    catch{
-      try {
-        json = new Cres.Message(text, false).toJSON(false,false, true, true, true, true, true, true, false, false)
-        
-        // json.commands.
-        // console.log(json)
+    // text ="no"
+    if (typ === "binary") {
+      try{
+        console.log(text)
+        text = "Binary ("+this.props.connection.binaryType+"): "+text
       }
-      catch (e){
-        console.warn(e)
-        // try {
-        //   json = this.cres2json(text)
-        //   // console.log(json)
-        // }
-        // catch (e){
-        //   // console.log(e)
-        //  }
-       }
-    }}
+      catch{
+        // text = "Cannot read data"
+        text = text+""
+      }
+    }
+    else {
+      if (this.props.connection.beautify === true) {
+        try {
+          json = JSON.parse(text)
+        }
+        catch{
+          try {
+            json = new Cres.Message(text, false).toJSON(false, false, true, true, true, true, true, true, false, false)
+
+            // json.commands.
+            // console.log(json)
+          }
+          catch (e) {
+            console.warn(e)
+            // try {
+            //   json = this.cres2json(text)
+            //   // console.log(json)
+            // }
+            // catch (e){
+            //   // console.log(e)
+            //  }
+          }
+        }
+      }
+      // console.log(text)
+
+    }
+
     return (<>
       {this.props.idx % 15 === 0 &&
         <IonItemDivider sticky style={{ textAlign: 'center' }}>
@@ -145,18 +165,18 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
             <div className="text">{text} @{timestring}</div>
             :
             json === undefined ?
-            <>{!messageFromMe? 
-              <><div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
-              <div className="date text">{timestring}</div>
-              </>
-              :
-              <><div className="date text">{timestring}</div>
-              <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
-              </>
-            }</>:
+              <>{!messageFromMe ?
+                <><div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+                  <div className="date text">{timestring}</div>
+                </>
+                :
+                <><div className="date text">{timestring}</div>
+                  <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+                </>
+              }</> :
               <JSONTree data={json}
                 hideRoot={true}
-                shouldExpandNode={(keyName:ReactText[], data:any, level:number)=>this.shouldExpandNode(keyName,data,level)}
+                shouldExpandNode={(keyName: ReactText[], data: any, level: number) => this.shouldExpandNode(keyName, data, level)}
                 theme={{ tree: (style: any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }), }}
               />
           }

@@ -59,7 +59,7 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
     if (Number(data.port) === 443) {
       useSSL = true
     }
-    const connect: Connection = { name: data.name, host: data.host, port: data.port, beautify: false, password: "", timeout: 5, commands: [], connected: false, info: '', id: 0, ssl: useSSL, autoconnect: false, messages:[] }
+    const connect: Connection = { name: data.name, host: data.host, port: data.port, beautify: false, password: "", timeout: 5, commands: [], connected: false, info: '', id: 0, ssl: useSSL, autoconnect: false, messages:[] , binaryOffset:0, binaryType:"int8"}
     this.props.addConnection(connect)
     this.props.saveConnections(this.props.connections)
   }

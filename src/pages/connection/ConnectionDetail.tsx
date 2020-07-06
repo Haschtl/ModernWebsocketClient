@@ -29,6 +29,8 @@ type State = {
   id: number
   ssl: boolean
   info: string
+  binaryType: "int8"|"uint8"|"int16"|"uint16"|"int32"|"uint32"|"float32"|"float64"|"bigint64"|"biguint64",
+  binaryOffset: number
   commands: Command[]
   messages: Message[]
   showAlert: boolean,
@@ -50,6 +52,8 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     id: -1,
     ssl: false,
     info: '',
+    binaryType: "int8",
+    binaryOffset: 0,
     commands: [],
     messages: [],
     showAlert: false,
@@ -103,6 +107,8 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       commands: this.props.connection.commands,
       id: this.props.connection.id,
       ssl: this.props.connection.ssl,
+      binaryType: this.props.connection.binaryType,
+      binaryOffset: this.props.connection.binaryOffset,
       isEdited: false,
       showAlert: false,
       alertHeader: '',
@@ -141,7 +147,6 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     if (this.state.isEdited) {
       this.setState({ ...this.state, 'isEdited': false })
       event.preventDefault();
-
       var con: Connection = {
         name: this.state.name,
         host: this.state.host,
@@ -151,6 +156,8 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         connected: false,
         commands: this.state.commands,
         info: this.state.info,
+        binaryType: this.state.binaryType,
+        binaryOffset: this.state.binaryOffset,
         id: this.state.id,
         ssl: this.state.ssl,
         beautify: this.state.beautify,
@@ -158,6 +165,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         autoconnect: false,
         messages: this.state.messages
       }
+      console.log(con)
       this.props.editConnection(con)
       this.props.saveConnections(this.props.connections)
     }
@@ -176,6 +184,13 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       commands = [] as Command[]
     }
     this.props.setCommands(this.props.connection, commands)
+  }
+  setBinaryType(num: any) {
+    this.setState({
+      ...this.state,
+      binaryType: num.detail.value,
+      isEdited: true
+    })
   }
 
   render() {
@@ -274,7 +289,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                   />
                   <IonInput type="password" placeholder="" value={this.state.password} onIonChange={(e: CustomEvent, key: string = 'password') => this.showSaveButton(e, key)}></IonInput>
                 </IonItem>
-                <IonItem>
+                {/* <IonItem>
                   <DescriptionFloater
                     title={this.props.t("Timeout [s]")}
                     text={<Trans>This timeout determines, how long the client waits for an answer. Increase it, If you encounter connectivity problems</Trans>}
@@ -282,7 +297,36 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                     theme={this.props.theme}
                   />
                   <IonInput type="number" placeholder="5" value={"" + this.state.timeout} onIonChange={(e: CustomEvent, key: string = 'timeout') => this.showSaveButton(e, key)}></IonInput>
+                </IonItem> */}
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Binary-Type")}
+                    text={<Trans>The binary format of binary data sent to the client</Trans>}
+                    item={<IonLabel position="floating"><Trans>Binary-Type</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonSelect onIonChange={(e) => this.setBinaryType(e)} value={this.state.binaryType}>
+                  <IonSelectOption value={"int8"} ><Trans>Int8</Trans></IonSelectOption>
+                  <IonSelectOption value={"uint8"} ><Trans>UInt8</Trans></IonSelectOption>
+                  <IonSelectOption value={"int16"} ><Trans>Int16</Trans></IonSelectOption>
+                  <IonSelectOption value={"uint16"} ><Trans>UInt16</Trans></IonSelectOption>
+                  <IonSelectOption value={"int32"} ><Trans>Int32</Trans></IonSelectOption>
+                  <IonSelectOption value={"uint32"} ><Trans>UInt32</Trans></IonSelectOption>
+                  <IonSelectOption value={"biguint64"} ><Trans>Big Int64</Trans></IonSelectOption>
+                  <IonSelectOption value={"bigint64"} ><Trans>Big UInt64</Trans></IonSelectOption>
+                  <IonSelectOption value={"float32"} ><Trans>Float32</Trans></IonSelectOption>
+                  <IonSelectOption value={"float64"} ><Trans>Float64</Trans></IonSelectOption>
+                </IonSelect>
                 </IonItem>
+                {/* <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Binary-Offset")}
+                    text={<Trans>The binary offset of binary data sent to the client</Trans>}
+                    item={<IonLabel position="floating"><Trans>Binary-Offset</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonInput type="number" placeholder="0" value={"" + this.state.binaryOffset} onIonChange={(e: CustomEvent, key: string = 'binaryOffset') => this.showSaveButton(e, key)}></IonInput>
+                </IonItem> */}
               </IonList>
             </IonCardContent>
           </IonCard>
@@ -356,13 +400,13 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
             <IonGrid>
               <IonRow>
                 <IonCol col-6>
-                  <IonButton expand="full" fill="solid" color="danger" onClick={() => this.resetState()}>
-                    <Trans>Discard</Trans>
+                  <IonButton expand="full" fill="solid" color="success" onClick={(e) => this.saveConnection(e)}>
+                    <Trans>Save</Trans>
                   </IonButton>
                 </IonCol>
                 <IonCol>
-                  <IonButton expand="full" fill="solid" color="success" onClick={(e) => this.saveConnection(e)}>
-                    <Trans>Save</Trans>
+                  <IonButton expand="full" fill="solid" color="danger" onClick={() => this.resetState()}>
+                    <Trans>Discard</Trans>
                   </IonButton>
                 </IonCol>
               </IonRow>
