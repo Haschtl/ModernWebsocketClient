@@ -42,7 +42,7 @@ export interface Message {
   // member: Connection | {id: -1, name: 'Me'},
   member: {id: number},
   date?: number,
-  text: string,
+  text: any,
 }
 
 export interface Command {

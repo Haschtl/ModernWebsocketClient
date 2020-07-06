@@ -134,7 +134,7 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
        }
     }}
     return (<>
-      {this.props.idx % 5 === 0 &&
+      {this.props.idx % 15 === 0 &&
         <IonItemDivider sticky style={{ textAlign: 'center' }}>
           {timestring}&nbsp;&nbsp;{datestring}
         </IonItemDivider>

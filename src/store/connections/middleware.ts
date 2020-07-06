@@ -206,7 +206,7 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
       next(connections.websocketConnection.failure({con:action.payload, meta:e}));
     };
 
-    ws.onmessage = (evt: any) => {
+    ws.onmessage = (evt: MessageEvent) => {
       next(connections.newDataIncoming(action.payload, evt.data));
     }
 
