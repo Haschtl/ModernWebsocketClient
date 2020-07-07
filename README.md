@@ -1,6 +1,6 @@
 ![](https://github.com/Haschtl/ModernWebsocketClient/blob/master/public/assets/icon/favicon.png)
 
-# OpenSource Websocket Client v1.5
+# OpenSource Websocket Client v1.6
 [Homepage](https://haschtl.github.io/ModernWebsocketClient/)
 [Demo](https://modern-websocket-client.web.app)
 ## Description
