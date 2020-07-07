@@ -8,10 +8,16 @@
 - This is an **OpenSource** project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
 - This is a simple WebsocketClient-Application with Input-Completition and some small nice features. You can use SecureWebsockets (SSL) or normal Websockets.
 - Connect to multiple servers at the same time.
+- Save messages and Auto-Complete
+- Modern Chat-like design
+- Multiple themes
+- All platforms supported
 - Nice JSON-Data formatting
+- Binary message supported
+- Basic Authentification supported
+- Sec-WebSocket-Protocol supported
 - Custom AES-Ecryption
-- Communication-Protocoll
-- Protocoll Presets - Till now hardcoded available: [Crescience Deneb](https://cre.science) and [RTOC](https://haschtl.github.io/RealTimeOpenControl/)
+- Message Presets - Available: [Crescience](https://cre.science) and [RTOC](https://haschtl.github.io/RealTimeOpenControl/)
 
 ## Example Ionic5 React project
 This app can be seen as an Ionic5 React example, that can be deployed on all available platforms with the following features:
