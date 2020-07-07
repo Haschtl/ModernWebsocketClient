@@ -118,6 +118,8 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
     var r1: Command[] = []
     var r2: Command[] = []
     var r3: Command[] = []
+    var r4: Command[] = []
+    var r5: Command[] = []
 
     try {
       console.log('Loading protocol presets from different files')
@@ -141,25 +143,31 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
       try{
       const response3 = await fetch('/assets/protocols/CresDeneb.yml');
       var res3: string = await response3.text()
-      // const r3 = YAML.parseCST(res3).
-      // var res3split = res3.split('\n')
-      // for(var i=1;i>res3split.length;i++){
-      //   if(res3split[i].indexOf(':')===-1){
-      //     res3split[i].split(')').join('')
-      //   }
-      // }
-      // res3 = res3split.join('\n')
       var obj = yaml.load(res3);
-      // console.log(obj)
       r3 = recursiveYaml(obj).map((value:string, idx:number)=>{
         return {value:value, num:0} as Command
       })
-      // console.log(r3)
-      // this code if you want to save
-      // fs.writeFileSync(outputfile, JSON.stringify(obj, null, 2));
       }catch (e){console.error(e); console.error('Cannot read /assets/protocols/CresDeneb.yml')}
       
-      const deneb = ['Crescience Deneb', [...r2,...r3]] as [string, Command[]]
+      try{
+        const response3 = await fetch('/assets/protocols/CresMaster.yml');
+        var res4: string = await response3.text()
+        var obj2 = yaml.load(res4);
+        r4 = recursiveYaml(obj2).map((value:string, idx:number)=>{
+          return {value:value, num:0} as Command
+        })
+        }catch (e){console.error(e); console.error('Cannot read /assets/protocols/CresDeneb.yml')}
+      
+        try{
+          const response3 = await fetch('/assets/protocols/CresControl.yml');
+          var res5: string = await response3.text()
+          var obj3 = yaml.load(res5);
+          r5 = recursiveYaml(obj3).map((value:string, idx:number)=>{
+            return {value:value, num:0} as Command
+          })
+          }catch (e){console.error(e); console.error('Cannot read /assets/protocols/CresDeneb.yml')}
+            
+      const deneb = ['Crescience', [...r2,...r3, ...r4, ...r5]] as [string, Command[]]
       const rtoc = ['RTOC', [...r1]] as [string, Command[]]
       next(connections.fetchProtocols.success([deneb, rtoc]));
     
@@ -187,23 +195,25 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
       encrypted = 'wss://'
     }
     // var options = {rejectUnauthorized: false};
+    var url = ""
     if (action.payload.ba_username !== ""){
       if (action.payload.ba_password !== "") {
-        var url = encrypted + action.payload.ba_username + ":"+ action.payload.ba_password +"@"+ action.payload.host + ':' + action.payload.port;
+        url = encrypted + action.payload.ba_username + ":"+ action.payload.ba_password +"@"+ action.payload.host + ':' + action.payload.port;
       }
       else{
-        var url = encrypted + action.payload.ba_username +"@"+ action.payload.host + ':' + action.payload.port;
+        url = encrypted + action.payload.ba_username +"@"+ action.payload.host + ':' + action.payload.port;
       }
     }
     else{
-      var url = encrypted + action.payload.host + ':' + action.payload.port;
+       url = encrypted + action.payload.host + ':' + action.payload.port;
 
     }
+    var ws: WebSocket
     if (action.payload.sec_websocket_protocol !== "") {
-      var ws = new WebSocket(url, action.payload.sec_websocket_protocol );
+      ws = new WebSocket(url, action.payload.sec_websocket_protocol );
     }
     else{
-      var ws = new WebSocket(url);
+      ws = new WebSocket(url);
     }
     ws.binaryType = 'arraybuffer';
     // ws.binaryType = 'blob';

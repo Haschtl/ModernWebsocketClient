@@ -2,7 +2,7 @@ import React
   from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { IonHeader, IonInput, IonSelect, IonSelectOption, IonText, IonBadge, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle, IonItemDivider } from '@ionic/react';
+import { IonHeader, IonInput, IonSelect, IonSelectOption, IonText, IonBadge, IonIcon, IonToggle, IonAlert, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButtons, IonButton, IonBackButton, IonItem, IonList, IonChip, IonLabel, IonContent, IonCard, IonCardHeader, IonCardContent, IonTitle } from '@ionic/react';
 import { RootState, actions, selectors } from '../../store';
 import { Connection, Message, Command } from '../../store/connections/types';
 import { save } from 'ionicons/icons';
@@ -177,7 +177,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         ba_password: this.state.ba_password,
         ba_username: this.state.ba_username,
       }
-      console.log(con)
+      // console.log(con)
       this.props.editConnection(con)
       this.props.saveConnections(this.props.connections)
     }
@@ -196,7 +196,13 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     else {
       commands = [] as Command[]
     }
-    this.props.setCommands(this.props.connection, commands)
+    // this.props.setCommands(this.props.connection, commands)
+    this.setState({
+      ...this.state,
+      commands: commands,
+      isEdited: true
+    })
+    // this.props.saveConnections(this.props.connections)
   }
   setBinaryType(num: any) {
     this.setState({
@@ -224,17 +230,18 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       encrypted = 'wss://'
     }
     // var options = {rejectUnauthorized: false};
-    if (connection.ba_username !== ""){
-      if (connection.ba_password !== "") {
+    var url = ""
+    if (connection.ba_username !== "" && connection.ba_username !== undefined){
+      if (connection.ba_password !== "" && connection.ba_password !== undefined) {
         const passw = "*".repeat(connection.ba_password.length)
-        var url = encrypted + connection.ba_username + ":"+ passw +"@"+ connection.host + ':' + connection.port;
+        url = encrypted + connection.ba_username + ":"+ passw +"@"+ connection.host + ':' + connection.port;
       }
       else{
-        var url = encrypted + connection.ba_username +"@"+ connection.host + ':' + connection.port;
+        url = encrypted + connection.ba_username +"@"+ connection.host + ':' + connection.port;
       }
     }
     else{
-      var url = encrypted + connection.host + ':' + connection.port;
+      url = encrypted + connection.host + ':' + connection.port;
     }
 
     return (
@@ -445,7 +452,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
               {/* <IonItemDivider></IonItemDivider> */}
               <IonList>
                 {
-                  this.props.connection.commands.sort(((a, b) => (
+                  this.state.commands.sort(((a, b) => (
                     b.num - a.num
                   ))).map((value: Command, index: number) => (
                     <IonItem key={'command' + index} onClick={(e) => this.removeCommand(value)}>

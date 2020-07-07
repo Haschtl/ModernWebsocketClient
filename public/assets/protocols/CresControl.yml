@@ -1,0 +1,62 @@
+crescontrol:
+  temperature: -1.
+  humidity: -1.
+  air-pressure: -1.
+
+  12v-switch:
+    enabled: false
+  24v-switch-a:
+    enabled: false
+  24v-switch-b:
+    enabled: false
+
+  fan:
+    enabled: true
+    duty-cycle: 50
+    duty-cycle-min: 10
+    rpm: -1.
+    vcc-pwm: false
+
+  out-a:
+    voltage: 0.
+    calib-offset: 0.
+    calib-factor: 0.
+    mode: 1 # (0:idle, 1:logic-level, 2:function generator)
+  out-b:
+    voltage: 0.
+    calib-offset: 0.
+    calib-factor: 0.
+  out-c:
+    voltage: 0.
+    calib-offset: 0.
+    calib-factor: 0.
+  out-d:
+    voltage: 0.
+    calib-offset: 0.
+    calib-factor: 0.
+  out-e:
+    voltage: 0.
+    calib-offset: 0.
+    calib-factor: 0.
+  out-f:
+    voltage: 0.
+    calib-offset: 0.
+    calib-factor: 0.
+
+  in-a:
+    voltage: 0.
+  in-b:
+    voltage: 0.
+
+  pid-1:
+    enabled: false
+    state: "idle"
+    in-signal: "temperature"
+    out-signal: "tec:current"
+    set-value: 0.
+    act-value: 0.
+    p-gain: 0.
+    i-gain: 0.
+    d-gain: 0.
+    ok-time: 1000
+    ok-tolerance: 0.

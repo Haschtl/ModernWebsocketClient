@@ -105,69 +105,79 @@ deneb:
     confirm-writes: false
     confirm-reads: false
     reset: ()
-  slaves:
 
+  engines:
+    get-info: ()
+    set-spectrum: ()
+    set-spectrum-by-context: ()
 
-
-
-  engineX:
+  engine-X:
     type: flux-engine
     serial: xxyyzz
+    state: -1
+    on: ()
+    off: ()
+    random: (ui8)
+
     led1:
-      digital:  0.
+      pwm:  0.
       analog: 0.
       id: 1
       spectrum: 660nm
-      current:  713.4
+      quantity: -1
+      nominal-current:  713.4
       voltage:  21.7
     led2:
-      digital:  0.
+      pwm:  0.
       analog: 0.
       id: 7
       spectrum: 620nm
-      current:  569.7
+      quantity: -1
+      nominal-current:  713.4
       voltage:  16.7
     led3:
-      digital:  0.
+      pwm:  0.
       analog: 0.
       id: 2
       spectrum: 445nm
-      current:  713.4
+      quantity: -1
+      nominal-current:  713.4
       voltage:  18.1
     led4:
-      digital:  0.
+      pwm:  0.
       analog: 0.
       id: 11
       spectrum: 720nm
-      current:  569.7
+      quantity: -1
+      nominal-current:  713.4
       voltage:  6.3
 
     eeprom:
       load: ()
       save: ()
-    led-temperature:  49.7
-    driver-temperature: 67.8
     mcu-temperature:  56.7
-    dithering:
-      enabled:  true
-      resolution: 3
-    temperature-control:
-      enabled:  true
-      temperature-limit:
-        led:  70
-        driver: 90
-        mcu:  75
-      shutdown-temperature:
-        led:  75
-        driver: 100
-        mcu:  80
-      shutdown-hysteresis:  5
-    calibration:
-      led-temperature-factor: 1.12
-      led-temperature-offset: 0.57
-      driver-temperature-factor:  1.15
-      driver-temperature-offset:  -0.23
-      mcu-temperature-factor: 24.1
-      mcu-temperature-offset: -641.3
+
+    led-temperature:  49.7
+    led-temperature-control:
+      calib-offset: 0.
+      calib-factor: 0.
+      clip-enabled: true
+      clip-temperature: 0.
+      shutdown-temperature: 0.
+      hysteresis: 0.
+
+    driver-temperature: 0.
+    driver-temperature-control:
+      calib-offset: 0.
+      calib-factor: 0.
+      clip-enabled: true
+      clip-temperature: 0.
+      shutdown-temperature: 0.
+      hysteresis: 0.
+
+    led-channels: -1
+
     i2c:
-      address:  23
+      address: 0
+      confirm-address: (byte)
+      obtain-address: (char[20])

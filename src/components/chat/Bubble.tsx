@@ -5,16 +5,16 @@ import { actions, RootState } from '../../store';
 import { Message, Connection } from '../../store/connections/types'
 import {
   IonItemDivider,
-  IonItemSliding,
-  IonItemOptions,
-  IonItemOption, IonIcon, IonItem
+  // IonItemSliding,
+  // IonItemOptions,
+  // IonItemOption, IonIcon, IonItem
 } from '@ionic/react';
 import JSONTree from 'react-json-tree'
 import * as Cres from '../../parser/message';
 // import { type } from 'os';
-import {
-  trash,
-} from 'ionicons/icons';
+// import {
+//   trash,
+// } from 'ionicons/icons';
 import "./Bubble.scss";
 
 type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> &

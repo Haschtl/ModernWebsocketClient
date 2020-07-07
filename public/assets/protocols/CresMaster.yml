@@ -1,60 +1,106 @@
-root:
-  type: root
-  serial: xxxyyyzzz
-  tag: mytag,another tag
+base:
+  type: ""
+  serial: -1
+  tag: ""
   time:
-    actual-time:  27d:10h:35m:15s
+    day-time:  ""
     ntp-enabled: true
-    ntp-server:  time.cre.science
-    timezone: -6
+    ntp-server:  ""
+    timezone: -1
     get-time: ()
-  login: (COOKIE,app,5)
-  logout: ()
-  aliases: ["alias1", "Alias2"]
-  allAliases: ["alias1", "(Alias2)"]
-  getCookie: (USERNAME, PASSWORD)
-  websocket:
-    remote-server:
-      connected: true
-      authenticated: true
-      alias: ""
-      domain: control.cre.science
-      port: 81
-      reconnect-interval: 5000
-      multicast:
-        clients: root,app-1
-        period: 10
-        # add-parameter()
-        # remove-parameter()
-        subscribe: ()
-        unsubscribe: ()
-
+  eeprom:
+    state:  ""
+    size: -1
+    read: (byte)
+    write: (byte,byte)
+    pull: ()
+    commit: ()
+    load: ()
+    save: ()
+    dump: ()
+  wifi:
+    state: ""
+    online: true
+    hostname: ""
+    incognito:
+      enabled: false
+      delay:  -1
+    access-point:
+      ssid: ""
+      key:  ""
+      ip: ""
+    client:
+      networks: ""
+      ssid: ""
+      key: ""
+      persistent: true
+      ip: ""
+      scan: ()
       connect: ()
       disconnect: ()
-    local-server:
-      alias: deneb-1
-      port: 81
-      clients: 2
-      broadcast-period: 0.1
+  websocket:
+    remote:
+      allow-connection: false
+      connected: false
+      authenticated: false
+      alias: ""
+      domain: ""
+      port: -1
+      url: ""
+      reconnect-interval: -1
+      connect: ()
+      disconnect: ()
+    local:
+      port: -1
+      clients: ""
+      client-count: -1
+  subscription:
+    remote-subscribers: ""
+    local-subscribers: ""
+    subscribe: ()
+    unsubscribe: ()
   user:
-    name: simon92
-    password: 19pass92
+    state:  ""
+    logged-in: false
+    id: -1
+    name: ""
+    password: ""
+    server: ""
+    cookie: ""
+    timeout:  -1
+    get-cookie: ()
+    login: ()
+    logout: ()
   firmware:
-    initialized: true
-    automatic-updates-enabled:  true
-    version: 1.0
-    target-version: latest
-    update-server:  update.cre.science
-    polling-period:  3600
-    polling-timeout:  30
+    initialized: false
+    automatic-updates-enabled:  false
+    version: ""
+    target-version: ""
+    update-server:  ""
+    backup-update-server:  ""
+    polling-period:  -1
+    polling-timeout:  -1
     check-update: ()
     perform-update: ()
-
+  tasks:
+    create-delay-tasks: (str,ui32)
+    create-periodic-task: (str,ui32,ui32)
+    create-daily-task: (str,str,ui32)
+    create-monitor: (str,ui32)
+    remove-task: (ui32)
+    dump-tasks: ()
   system:
-    current-errors: 1024,3154,engine1:8754
+    cpu-id: -1
+    reset-cause: ""
     debugging-enabled:  false
-    cpu-usage:
-    ram-usage:
+    frequency:  -1.
+    heap:
+      size: -1
+      free: -1
+      largest-block: -1
+      watermark: -1
     parameter-dump: ()
-    clear-errors: ()
     reboot: ()
+  signals:
+    signal-1:
+      name: ""

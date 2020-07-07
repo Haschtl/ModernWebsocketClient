@@ -4,15 +4,15 @@ import { ConnectionState, Connection, Message, Command } from './types';
 import * as crypto from '../encryption'
 import * as cogoToast from '../../components/CustomToasts';
 import i18n from '../../i18n';
-import { read } from 'fs';
-import { type } from 'os';
+// import { read } from 'fs';
+// import { type } from 'os';
 
 
 export const connectionDefaultState: ConnectionState = {
   connections: [],
   theme: 'dark-theme',
   tutorials: [],
-  version: '1.5.2',
+  version: '1.6',
   protocolPresets: [],
 }
 
