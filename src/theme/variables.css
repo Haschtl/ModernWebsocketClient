@@ -19,110 +19,14 @@
 */
 
 
-input {
-  padding: 5px;
-  font-size: 16px;
-  border-radius: 0px;
-  border: 0px;
-  flex-grow: 1;
-}
 
-.Footer {
-  background-color: black;
-}
-
-.fixedDi {
+/* .fixedDi {
   display: flex;
   flex-wrap: nowrap;
   overflow-y: auto;
   
-}
+} */
 
-form {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  max-width: 900px;
-  /* margin: 0 auto 40px; */
-}
-
-Messageslist {
-  padding: 20px 0;
-  max-width: 900px;
-  width: 90%;
-  margin: 0 auto;
-  list-style: none;
-  padding-left: 0;
-  flex-grow: 1;
-  overflow: auto;
-}
-
-.Messages-message {
-  display: flex;
-  margin-top: 10px;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-
-.Messages-message.currentMember {
-  /* justify-content: flex-end; */
-  flex-direction: row-reverse;
-  /* text-align: right; */
-}
-.Messages-message.appMember {
-  /* justify-content: flex-end; */
-  flex-direction: column;
-  text-align: center;
-  font-size: 12px;
-}
-
-.Message-content {
-  display: inline-block;
-}
-
-
-.currentMember > .Message-content {
-  align-items: flex-end;
-}
-
-.date { 
-  background-color: transparent !important;
-  opacity: 0.5;
-  font-size: smaller;
-}
-.Message-content > .text {
-  padding: 10px;
-  max-width: 400px;
-  margin: 0;
-  border-radius: 12px;
-  background-color: var(--it-background,cornflowerblue);
-  color: var(--it-text,white);
-  display: inline-block;
-}
-
-.currentMember > .Message-content .text {
-  background-color: var(--me-background,orangered);
-  color: var(--me-text,white);
-}
-
-.Recomm {
-  border-top: 1px solid white;
-}
-.CurrentJsonMember {
-  background-color: transparent;
-  align-items: flex-end;
-  border-top: 1px solid var(--me-border,orangered);
-  border-bottom: 1px solid var(--me-bottom,orangered);
-}
-.JsonMember {
-  background-color: transparent;
-  border-top: 1px solid var(--it-border,cornflowerblue);
-  border-bottom: 1px solid var(--it-border,cornflowerblue);
-}
-
-.appMember > .Message-content .text {
-  background-color: transparent;
-}
 
 
 :root {
@@ -132,6 +36,9 @@ Messageslist {
   --it-background: #6ecc6b;
   --it-border: #123456;
   --it-text: #000000;
+
+  --footer-background: #ececec;
+  --footer-text: #535353;
   --ion-color-angular: #ac282b;
   --ion-color-communication: #8e8d93;
   --ion-color-tooling: #fe4c52;
@@ -141,6 +48,7 @@ Messageslist {
   --ion-color-food: #3bc7c4;
   --ion-color-documentation: #b16be3;
   --ion-color-navigation: #6600cc;
+  --ion-headings-font-weight: 300;
 
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -206,121 +114,11 @@ Messageslist {
   --ion-color-light-tint: #f5f6f9;
 }
 
-/* Additional Ionic Colors
-// --------------------------------------------------
-// In order to add colors to be used with Ionic components,
-// the color should be added as a class with the convention `.ion-color-{COLOR}`
-// where `{COLOR}` is the color to be used on the Ionic component
-// and each variant is defined for the color. For more information, please see
-// https://beta.ionicframework.com/docs/theming/advanced
-*/
-
-/* .ion-color-favorite {
-  --ion-color-base: #69bb7b;
-  --ion-color-base-rgb: 105, 187, 123;
-  --ion-color-contrast: #ffffff;
-  --ion-color-contrast-rgb: 255, 255, 255;
-  --ion-color-shade: #5ca56c;
-  --ion-color-tint: #78c288;
-}
-
-.ion-color-twitter {
-  --ion-color-base: #1da1f4;
-  --ion-color-base-rgb: 29, 161, 244;
-  --ion-color-contrast: #ffffff;
-  --ion-color-contrast-rgb: 255, 255, 255;
-  --ion-color-shade: #1a8ed7;
-  --ion-color-tint: #34aaf5;
-}
-
-.ion-color-google {
-  --ion-color-base: #dc4a38;
-  --ion-color-base-rgb: 220, 74, 56;
-  --ion-color-contrast: #ffffff;
-  --ion-color-contrast-rgb: 255, 255, 255;
-  --ion-color-shade: #c24131;
-  --ion-color-tint: #e05c4c;
-}
-
-.ion-color-vimeo {
-  --ion-color-base: #23b6ea;
-  --ion-color-base-rgb: 35, 182, 234;
-  --ion-color-contrast: #ffffff;
-  --ion-color-contrast-rgb: 255, 255, 255;
-  --ion-color-shade: #1fa0ce;
-  --ion-color-tint: #39bdec;
-}
-
-.ion-color-facebook {
-  --ion-color-base: #3b5998;
-  --ion-color-base-rgb: 59, 89, 152;
-  --ion-color-contrast: #ffffff;
-  --ion-color-contrast-rgb: 255, 255, 255;
-  --ion-color-shade: #344e86;
-  --ion-color-tint: #4f6aa2;
-} */
-
-/* Shared Variables
-// --------------------------------------------------
-// To customize the look and feel of this app, you can override
-// the CSS variables found in Ionic's source files.
-// To view all the possible Ionic variables, see:
-// https://beta.ionicframework.com/docs/theming/css-variables#ionic-variables
-*/
-
-:root {
-  --ion-headings-font-weight: 300;
-
-  --ion-color-angular: #ac282b;
-  --ion-color-communication: #8e8d93;
-  --ion-color-tooling: #fe4c52;
-  --ion-color-services: #fd8b2d;
-  --ion-color-design: #fed035;
-  --ion-color-workshop: #69bb7b;
-  --ion-color-food: #3bc7c4;
-  --ion-color-documentation: #b16be3;
-  --ion-color-navigation: #6600cc;
-}
-
-
-
-
-
-
-
-
-
-
-.list-time {
-  width: 70px;
-  min-height: 2.3em;
-}
-.list-time.purple-border {
-  border-right: 2px solid purple;
-}
-.list-time.orange-border {
-  border-right: 2px solid orange;
-}
-.list-time .bold {
-  color: black;
-}
-
-.ion-toggle.info_event_toggle {
-  /* background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…IgZGF0YS1vbGRfY29sb3I9IiMwMDg5RkYiPjwvcGF0aD4KCTwvZz4KPC9nPjwvZz4gPC9zdmc+); */
-  background-repeat: no-repeat;
-  background-size: 80%;
-  background-color: rgb(184, 34, 34);
-  background-position: center;
-}
-
-.toggle-icon {
-  background-color: rgb(94, 255, 0);
-}
-
 
 ion-backdrop{
   width: 100vw !important;
 }
+
 /* Action suggestions */
 .my-textarea {
   font-size: 20px;

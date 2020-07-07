@@ -6,6 +6,11 @@
   --it-background: #2b1915;
   --it-border: #123456;
   --it-text: #ffffff;
+  
+  --footer-background: #000000;
+  --footer-text: #d4d4d4;
+
+
     --ion-item-background-activated: #000000;
     --ion-item-background: #000000;
     --ion-item-border-color: #0e0e0e;
@@ -18,7 +23,7 @@
     --ion-text-color: #ffffff;
     --ion-text-color-rgb: 255,255,255;
   
-    --ion-border-color: #000000;
+    --ion-border-color: #d1d1d1;
   
     --ion-color-primary: rgb(57, 82, 134);
     --ion-color-primary-contrast: #ffffff;
@@ -105,10 +110,6 @@
     
   }
   
-  input {
-    background-color: black;
-    color: white;
-  }
 
   
 /* .text { 

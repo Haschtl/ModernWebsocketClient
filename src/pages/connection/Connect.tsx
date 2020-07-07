@@ -48,10 +48,31 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
       cogoToast.error(this.props.t('You need to specify a hostadress'))
       return
     }
-    if (data.host+"".startsWith("ws://") === true || data.host+"".startsWith("wss://") === true) {
-      cogoToast.error(this.props.t('The hostname must not contain "ws://" or "wss://". SSL or not can be configured afterwards and is automatically enabled on port 443.'))
+    if (data.host.startsWith("ws://") === true) {
+      // cogoToast.error(this.props.t('The hostname must not contain "ws://". SSL or not can be configured afterwards and is automatically enabled on port 443.'))
+      // return
+      data.host = data.host.replace("ws://","")
+    }
+    if (data.host.startsWith("wss://") === true) {
+      // cogoToast.error(this.props.t('The hostname must not contain "wss://". SSL or not can be configured afterwards and is automatically enabled on port 443.'))
+      // return
+      data.host = data.host.replace("wss://","")
+    }
+    if (data.host.startsWith("http://") === true) {
+      // cogoToast.error(this.props.t('The hostname must not contain "http://". SSL or not can be configured afterwards and is automatically enabled on port 443.'))
+      // return
+      data.host = data.host.replace("http://","")
+    }
+    if (data.host.startsWith("https://") === true) {
+      // cogoToast.error(this.props.t('The hostname must not contain "https://". SSL or not can be configured afterwards and is automatically enabled on port 443.'))
+      // return
+      data.host = data.host.replace("https://","")
+    }
+    if (data.host.startsWith("ftp://") === true) {
+      cogoToast.error(this.props.t('The hostname must not contain "ftp://". FTP is a different protocol...'))
       return
     }
+    
     var useSSL = false
     if (data.ssl) {
       useSSL = true
@@ -59,7 +80,26 @@ class Connect extends PureComponent<Props & WithTranslation, State> {
     if (Number(data.port) === 443) {
       useSSL = true
     }
-    const connect: Connection = { name: data.name, host: data.host, port: data.port, beautify: false, password: "", timeout: 5, commands: [], connected: false, info: '', id: 0, ssl: useSSL, autoconnect: false, messages:[] , binaryOffset:0, binaryType:"int8"}
+    const connect: Connection = { 
+      name: data.name, 
+      host: data.host, 
+      port: data.port, 
+      beautify: false, 
+      password: "", 
+      timeout: 5, 
+      commands: [], 
+      connected: false, 
+      info: '', 
+      id: 0, 
+      ssl: useSSL, 
+      autoconnect: false, 
+      messages:[] , 
+      binaryOffset:0, 
+      binaryType:"int8",
+      sec_websocket_protocol: "",
+      ba_password: "",
+      ba_username: "",
+    }
     this.props.addConnection(connect)
     this.props.saveConnections(this.props.connections)
   }

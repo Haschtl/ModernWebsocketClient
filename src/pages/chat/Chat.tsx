@@ -28,7 +28,7 @@ import {
   send,
   menu
 } from 'ionicons/icons';
-
+import "./Chat.scss"
 
 type Props = RouteComponentProps<{ id: string, tab: string }> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> & {
   // connection: Connection
@@ -220,7 +220,7 @@ class Chat extends Component<Props & WithTranslation, State> {
           >
           </ChatList>
         </IonContent>
-        <IonFooter translucent={true} className="Footer">
+        <IonFooter translucent={false} className="Footer">
           {/* {(this.state.textinput.length > 0 && commands.length > 0) && */}
           <Collapse in={this.state.showPopup} collapsedHeight={0}>
             <IonList className={"Recomm"} style={{ overflow: "auto", whiteSpace: "nowrap", maxHeight: "30vh", minHeight: "30vh" }}>
@@ -256,8 +256,9 @@ class Chat extends Component<Props & WithTranslation, State> {
           </Collapse>
           {this.props.connection.connected === true ?
             <>
-              <form onSubmit={e => this.onSubmit(e)}>
+              <form className="inputLine" onSubmit={e => this.onSubmit(e)}>
                 <input
+                  className="textInput"
                   onKeyDown={(e) => this.onKeyDown(e)}
                   onChange={e => this.onChange(e)}
                   value={text}

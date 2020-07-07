@@ -4,16 +4,24 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { actions, RootState } from '../../store';
 import { Message, Connection } from '../../store/connections/types'
 import {
-  IonItemDivider
+  IonItemDivider,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption, IonIcon, IonItem
 } from '@ionic/react';
 import JSONTree from 'react-json-tree'
 import * as Cres from '../../parser/message';
 // import { type } from 'os';
+import {
+  trash,
+} from 'ionicons/icons';
+import "./Bubble.scss";
 
 type MessageProps = RouteComponentProps<{}> & typeof mapDispatchToProps & ReturnType<typeof mapStateToProps> &
 {
   connection: Connection,
   message: Message,
+  lastMessage?: Message,
   idx: number,
 };
 
@@ -23,6 +31,7 @@ type MessageState = {
 class MessageBubble extends React.Component<MessageProps, MessageState> {
   defaultState: MessageState = {
   }
+  ionItemSlidingRef: React.RefObject<any>
 
   constructor(props: MessageProps) {
     super(props);
@@ -30,7 +39,19 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     this.state = {
       ...this.defaultState
     };
+    this.ionItemSlidingRef = React.createRef();
   }
+
+  dismissAlert = () => {
+    try {
+      // this.setState(() => ({
+      //   ...this.defaultState
+      // }));
+      this.ionItemSlidingRef.current.close();
+    }
+    catch { }
+  }
+
 
   cres2json(str: string) {
     const strsplit = str.split('::')
@@ -94,35 +115,46 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
     }
   }
 
-  render() {
-    var { member, typ, text, date } = this.props.message;
-    const messageFromMe = member.id === -1;
-    const messageFromApp = member.id === -2;
+  memberID2bubbleClass(id: number) {
+    const messageFromMe = id === -1;
+    const messageFromApp = id === -2;
     const className = messageFromMe ?
       "Messages-message currentMember" : messageFromApp ?
         "Messages-message appMember" : "Messages-message";
     const className2 = messageFromMe ?
       "Messages-message CurrentJsonMember" : messageFromApp ?
         "Messages-message appMember" : "Messages-message JsonMember";
+    return { messageFromMe, messageFromApp, className, className2 }
+  }
+
+  render() {
+    var { member, typ, text, date } = this.props.message;
+    const { messageFromMe, messageFromApp, className, className2 } = this.memberID2bubbleClass(member.id)
     var datestring = ''
     var timestring = ''
+    var dateDiff = 1
     if (date !== undefined) {
+
       // datestring= '@'+
       timestring = new Date(date).toLocaleTimeString()
-      datestring = new Date(date).toLocaleDateString()
-
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+      datestring = new Date(date).toLocaleDateString(undefined, options)
+      if (this.props.lastMessage !== undefined) {
+        const lastDate = new Date(this.props.lastMessage.date as number).getDate()
+        dateDiff = new Date(date).getDate() - lastDate
+      }
     }
     var json: any = undefined;
     // var cmd:any= {};
     // text ="no"
     if (typ === "binary") {
-      try{
+      try {
         console.log(text)
-        text = "Binary ("+this.props.connection.binaryType+"): "+text
+        text = "Binary (" + this.props.connection.binaryType + "): " + text
       }
       catch{
         // text = "Cannot read data"
-        text = text+""
+        text = text + ""
       }
     }
     else {
@@ -153,35 +185,52 @@ class MessageBubble extends React.Component<MessageProps, MessageState> {
 
     }
 
-    return (<>
-      {this.props.idx % 15 === 0 &&
-        <IonItemDivider sticky style={{ textAlign: 'center' }}>
-          {timestring}&nbsp;&nbsp;{datestring}
-        </IonItemDivider>
-      }
-      <li className={className} key={'msg' + this.props.idx}>
-        <div className="Message-content">
-          {messageFromApp ?
-            <div className="text">{text} @{timestring}</div>
-            :
-            json === undefined ?
-              <>{!messageFromMe ?
-                <><div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
-                  <div className="date text">{timestring}</div>
-                </>
+    return (
+      <>
+        {dateDiff !== 0 &&
+          <IonItemDivider sticky style={{ textAlign: 'center' }}>
+            {datestring}
+          </IonItemDivider>
+        }
+        {/* <IonItemSliding ref={this.ionItemSlidingRef} className="supress-sliding"> 
+          <IonItem className="supress-sliding">  */}
+
+          <li className={className} key={'msg' + this.props.idx}>
+            <div className="Message-content">
+              {messageFromApp ?
+                <div className="text">{text} @{timestring}</div>
                 :
-                <><div className="date text">{timestring}</div>
-                  <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
-                </>
-              }</> :
-              <JSONTree data={json}
-                hideRoot={true}
-                shouldExpandNode={(keyName: ReactText[], data: any, level: number) => this.shouldExpandNode(keyName, data, level)}
-                theme={{ tree: (style: any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }), }}
-              />
-          }
-        </div>
-      </li></>
+                json === undefined ?
+                  <>{!messageFromMe ?
+                    <><div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+                      <div className="date text">{timestring}</div>
+                    </>
+                    :
+                    <><div className="date text">{timestring}</div>
+                      <div className="text" onClick={() => { this.props.setChatInput(this.props.connection, this.props.message.text) }}>{text}</div>
+                    </>
+                  }</> :
+                  <JSONTree data={json}
+                    hideRoot={true}
+                    shouldExpandNode={(keyName: ReactText[], data: any, level: number) => this.shouldExpandNode(keyName, data, level)}
+                    theme={{ tree: (style: any) => ({ style: { ...style, backgroundColor: undefined }, className: className2 }), }}
+                  />
+              }
+            </div>
+          </li>
+
+          {/* </IonItem>
+          <IonItemOptions
+            onIonSwipe={() => alert("heey")}
+          >
+            <IonItemOption color="danger"
+              onClick={() => alert("yoo")}
+              expandable={true}>
+              <IonIcon icon={trash}></IonIcon>
+            </IonItemOption>
+          </IonItemOptions>
+        </IonItemSliding> */}
+      </>
     );
   }
 }

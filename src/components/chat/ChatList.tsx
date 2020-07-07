@@ -170,6 +170,7 @@ class ChatList extends React.Component<Props, State> {
               connection={this.props.connection}
               message={m}
               key={'msge' + idx}
+              lastMessage={idx===0?undefined:messages[idx-1]}
               idx={idx}
             >
             </MessageBubbler>

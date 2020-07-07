@@ -11,6 +11,9 @@
   --it-border: #123456;
   --it-text: #e5e2e2;
 
+  --footer-background: #0e0f11;
+  --footer-text: #d4d4d4;
+
     --ion-item-background-activated: #313131;
     /* --ion-footer-background: #1f1f1f; */
     --ion-item-background: #1A1B1E;
@@ -24,7 +27,7 @@
     --ion-text-color: #ffffff;
     --ion-text-color-rgb: 255,255,255;
     
-    --ion-border-color: #222222;
+    --ion-border-color: #cacaca;
   
     --ion-color-primary: #7a610d;
     --ion-color-primary-contrast: #ffffff;

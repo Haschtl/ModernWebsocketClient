@@ -1,0 +1,98 @@
+// Messageslist {
+//     padding: 20px 0;
+//     max-width: 900px;
+//     width: 90%;
+//     margin: 0 auto;
+//     list-style: none;
+//     padding-left: 0;
+//     flex-grow: 1;
+//     overflow: auto;
+// }
+.supress-sliding{
+    padding: inherit;
+    margin: inherit;
+    flex: inherit;
+    display: contents;
+    // overflow: hidden;
+    width: inherit;
+    border: 0px !important;
+    position: inherit;
+} 
+
+.input-wrapper{
+    border: none !important;
+
+}
+.Messages-message {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    // pointer-events: none;
+
+}
+
+.Messages-message.currentMember {
+    /* justify-content: flex-end; */
+    flex-direction: row-reverse;
+    /* text-align: right; */
+}
+
+.Messages-message.appMember {
+    /* justify-content: flex-end; */
+    flex-direction: column;
+    text-align: center;
+    font-size: 12px;
+}
+
+.Message-content {
+    display: inline-block;
+    // pointer-events: none;
+}
+
+
+.currentMember>.Message-content {
+    align-items: flex-end;
+}
+
+.date {
+    background-color: transparent !important;
+    opacity: 0.5;
+    font-size: smaller;
+    padding-top: 0px !important;
+    top: 0px !important;
+    vertical-align: top !important;
+}
+
+.Message-content>.text {
+    padding: 10px;
+    max-width: 400px;
+    margin: 0;
+    border-radius: 12px;
+    background-color: var(--it-background, cornflowerblue);
+    color: var(--it-text, white);
+    display: inline-block;
+}
+
+.currentMember>.Message-content .text {
+    background-color: var(--me-background, orangered);
+    color: var(--me-text, white);
+}
+
+
+.CurrentJsonMember {
+    background-color: transparent;
+    align-items: flex-end;
+    border-top: 1px solid var(--me-border, orangered);
+    border-bottom: 1px solid var(--me-bottom, orangered);
+}
+
+.JsonMember {
+    background-color: transparent;
+    border-top: 1px solid var(--it-border, cornflowerblue);
+    border-bottom: 1px solid var(--it-border, cornflowerblue);
+}
+
+.appMember>.Message-content .text {
+    background-color: transparent;
+}

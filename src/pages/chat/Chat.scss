@@ -1,0 +1,31 @@
+
+
+.textInput {
+    background-color: var(--footer-background, black) !important;
+    color: var(--footer-text, white) !important;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 0px;
+    border: 0px;
+    flex-grow: 1;
+  }
+
+
+.inputLine {
+display: flex;
+width: 100%;
+justify-content: space-between;
+max-width: 900px;
+background-color: transparent;
+/* margin: 0 auto 40px; */
+}
+
+
+.Footer {
+    background-color: var(--footer-background, black);
+    box-shadow: 0px 0px 20px 10px var(--footer-background, black);
+
+  }
+// .Recomm {
+//     border-top: 1px solid white;
+//   }

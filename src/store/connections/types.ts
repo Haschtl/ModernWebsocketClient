@@ -15,7 +15,10 @@ export interface Connection {
   password: string,
   beautify: boolean,
   binaryType: "int8"|"uint8"|"int16"|"uint16"|"int32"|"uint32"|"float32"|"float64"|"bigint64"|"biguint64",
-  binaryOffset: number
+  binaryOffset: number,
+  sec_websocket_protocol: string,
+  ba_password: string,
+  ba_username: string,
 }
 
 export interface ConnectionState {
@@ -43,7 +46,7 @@ export interface Tutorial {
 export interface Message {
   // member: Connection | {id: -1, name: 'Me'},
   member: {id: number},
-  date?: number,
+  date: number,
   msg?: MessageEvent,
   typ: "string"|"binary"
   text: string,

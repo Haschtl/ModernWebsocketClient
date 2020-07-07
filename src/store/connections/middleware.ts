@@ -187,8 +187,24 @@ export const fetchConnectionsMiddleware: Middleware<{}, ConnectionState> = ({ ge
       encrypted = 'wss://'
     }
     // var options = {rejectUnauthorized: false};
-    var url = encrypted + action.payload.host + ':' + action.payload.port;
-    var ws = new WebSocket(url);
+    if (action.payload.ba_username !== ""){
+      if (action.payload.ba_password !== "") {
+        var url = encrypted + action.payload.ba_username + ":"+ action.payload.ba_password +"@"+ action.payload.host + ':' + action.payload.port;
+      }
+      else{
+        var url = encrypted + action.payload.ba_username +"@"+ action.payload.host + ':' + action.payload.port;
+      }
+    }
+    else{
+      var url = encrypted + action.payload.host + ':' + action.payload.port;
+
+    }
+    if (action.payload.sec_websocket_protocol !== "") {
+      var ws = new WebSocket(url, action.payload.sec_websocket_protocol );
+    }
+    else{
+      var ws = new WebSocket(url);
+    }
     ws.binaryType = 'arraybuffer';
     // ws.binaryType = 'blob';
     // websocket onopen event listener

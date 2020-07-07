@@ -29,7 +29,7 @@ type State = {
   id: number
   ssl: boolean
   info: string
-  binaryType: "int8"|"uint8"|"int16"|"uint16"|"int32"|"uint32"|"float32"|"float64"|"bigint64"|"biguint64",
+  binaryType: "int8" | "uint8" | "int16" | "uint16" | "int32" | "uint32" | "float32" | "float64" | "bigint64" | "biguint64",
   binaryOffset: number
   commands: Command[]
   messages: Message[]
@@ -38,6 +38,9 @@ type State = {
   alertMessage?: string;
   alertButtons: (AlertButton | string)[];
   beautify: boolean;
+  sec_websocket_protocol: string,
+  ba_password: string,
+  ba_username: string,
 }
 
 class ConnectionDetail extends React.PureComponent<Props & WithTranslation, State> {
@@ -60,7 +63,10 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     alertHeader: '',
     alertMessage: undefined,
     alertButtons: [],
-    beautify: false
+    beautify: false,
+    sec_websocket_protocol: "",
+    ba_password: "",
+    ba_username: "",
   }
 
   constructor(props: Props & WithTranslation) {
@@ -89,7 +95,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
   toggleSSL() {
     this.setState({ ...this.state, 'ssl': !this.state.ssl, 'isEdited': true })
   }
-  toggleBeautify(){
+  toggleBeautify() {
     this.setState({ ...this.state, 'beautify': !this.state.beautify, 'isEdited': true })
   }
 
@@ -116,6 +122,9 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       alertButtons: [],
       beautify: this.props.connection.beautify,
       messages: this.props.connection.messages,
+      sec_websocket_protocol: this.props.connection.sec_websocket_protocol,
+      ba_password: this.props.connection.ba_password,
+      ba_username: this.props.connection.ba_username,
     })
   }
 
@@ -163,7 +172,10 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
         beautify: this.state.beautify,
         // messages: [],
         autoconnect: false,
-        messages: this.state.messages
+        messages: this.state.messages,
+        sec_websocket_protocol: this.state.sec_websocket_protocol,
+        ba_password: this.state.ba_password,
+        ba_username: this.state.ba_username,
       }
       console.log(con)
       this.props.editConnection(con)
@@ -179,8 +191,9 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
     if (this.props.connection === undefined) { return }
     var commands = [] as Command[]
     if (num.detail.value >= 0) {
-      commands = this.props.protocolPresets[num.detail.value][1]}
-    else{
+      commands = this.props.protocolPresets[num.detail.value][1]
+    }
+    else {
       commands = [] as Command[]
     }
     this.props.setCommands(this.props.connection, commands)
@@ -206,6 +219,23 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
       );
     }
     const connection = this.props.connection;
+    var encrypted = 'ws://'
+    if (connection.ssl) {
+      encrypted = 'wss://'
+    }
+    // var options = {rejectUnauthorized: false};
+    if (connection.ba_username !== ""){
+      if (connection.ba_password !== "") {
+        const passw = "*".repeat(connection.ba_password.length)
+        var url = encrypted + connection.ba_username + ":"+ passw +"@"+ connection.host + ':' + connection.port;
+      }
+      else{
+        var url = encrypted + connection.ba_username +"@"+ connection.host + ':' + connection.port;
+      }
+    }
+    else{
+      var url = encrypted + connection.host + ':' + connection.port;
+    }
 
     return (
       <>
@@ -235,9 +265,13 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                 <IonChip slot="end">
                   <IonLabel color={(connection.connected ? "success" : "danger")}>{(connection.connected ? "Online" : "Offline")}</IonLabel>
                 </IonChip></h1>
+              <IonLabel>{url}</IonLabel>
               {connection.info}
             </IonCardHeader>
+          </IonCard>
+          <IonCard>
 
+            <IonCardHeader><Trans>Connection</Trans></IonCardHeader>
             <IonCardContent className="ion-padding">
               <IonList>
                 <IonItem>
@@ -271,15 +305,44 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                   />
                   <IonToggle slot='end' checked={this.state.ssl} onIonChange={() => this.toggleSSL()}></IonToggle>
                 </IonItem>
+              </IonList>
+            </IonCardContent>
+          </IonCard>
+          <IonCard>
+
+            <IonCardHeader><Trans>Basic Authentication</Trans></IonCardHeader>
+            <IonCardContent>
+              <IonList>
                 <IonItem>
                   <DescriptionFloater
-                    title={this.props.t("Beautify")}
-                    text={<Trans>If true, messages will be parsed for JSON content, which will then by displaced interactively. Works also with Crescience-Protocol!</Trans>}
-                    item={<IonLabel position="floating"><Trans>Beatify</Trans></IonLabel>}
+                    title={this.props.t("Username")}
+                    text={<Trans>Enter the Username for Basic Auth here</Trans>}
+                    item={<IonLabel position="floating"><Trans>Username</Trans></IonLabel>}
                     theme={this.props.theme}
                   />
-                  <IonToggle slot='end' checked={this.state.beautify} onIonChange={() => this.toggleBeautify()}></IonToggle>
+                  {/* <InputInfoLabel label={<Trans>Host-Address</Trans>} info="The hostname (or IP-address) of Websocket-Server" > */}
+                  <IonInput placeholder="username" value={this.state.ba_username} onIonChange={(e: CustomEvent, key: string = 'ba_username') => this.showSaveButton(e, key)}></IonInput>
+                  {/* </InputInfoLabel> */}
                 </IonItem>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Password")}
+                    text={<Trans>Enter the Password for Basic Auth here</Trans>}
+                    item={<IonLabel position="floating"><Trans>Password</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  {/* <InputInfoLabel label={<Trans>Host-Address</Trans>} info="The hostname (or IP-address) of Websocket-Server" > */}
+                  <IonInput type="password" placeholder="" value={this.state.ba_password} onIonChange={(e: CustomEvent, key: string = 'ba_password') => this.showSaveButton(e, key)}></IonInput>
+                  {/* </InputInfoLabel> */}
+                </IonItem>
+              </IonList>
+            </IonCardContent>
+          </IonCard>
+          <IonCard>
+
+            <IonCardHeader><Trans>Advanced</Trans></IonCardHeader>
+            <IonCardContent>
+              <IonList>
                 <IonItem>
                   <DescriptionFloater
                     title={this.props.t("Password (-> Github-repo)")}
@@ -288,6 +351,68 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                     theme={this.props.theme}
                   />
                   <IonInput type="password" placeholder="" value={this.state.password} onIonChange={(e: CustomEvent, key: string = 'password') => this.showSaveButton(e, key)}></IonInput>
+                </IonItem>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Binary-Type")}
+                    text={<Trans>The binary format of binary data sent to the client</Trans>}
+                    item={<IonLabel position="floating"><Trans>Binary-Type</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonSelect onIonChange={(e) => this.setBinaryType(e)} value={this.state.binaryType}>
+                    <IonSelectOption value={"int8"} ><Trans>Int8</Trans></IonSelectOption>
+                    <IonSelectOption value={"uint8"} ><Trans>UInt8</Trans></IonSelectOption>
+                    <IonSelectOption value={"int16"} ><Trans>Int16</Trans></IonSelectOption>
+                    <IonSelectOption value={"uint16"} ><Trans>UInt16</Trans></IonSelectOption>
+                    <IonSelectOption value={"int32"} ><Trans>Int32</Trans></IonSelectOption>
+                    <IonSelectOption value={"uint32"} ><Trans>UInt32</Trans></IonSelectOption>
+                    <IonSelectOption value={"biguint64"} ><Trans>Big Int64</Trans></IonSelectOption>
+                    <IonSelectOption value={"bigint64"} ><Trans>Big UInt64</Trans></IonSelectOption>
+                    <IonSelectOption value={"float32"} ><Trans>Float32</Trans></IonSelectOption>
+                    <IonSelectOption value={"float64"} ><Trans>Float64</Trans></IonSelectOption>
+                  </IonSelect>
+                </IonItem>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Sec-WebSocket-Protocol")}
+                    text={<Trans>Set the Sec-WebSocket-Protocol here.</Trans>}
+                    item={<IonLabel position="floating"><Trans>Sec-WebSocket-Protocol</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  {/* <InputInfoLabel label={<Trans>Host-Address</Trans>} info="The hostname (or IP-address) of Websocket-Server" > */}
+                  <IonInput type="password" placeholder="" value={this.state.sec_websocket_protocol} onIonChange={(e: CustomEvent, key: string = 'sec_websocket_protocol') => this.showSaveButton(e, key)}></IonInput>
+                  {/* </InputInfoLabel> */}
+                </IonItem>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Message Presets")}
+                    text={<Trans>Select one of the predefined sets of messages.</Trans>}
+                    item={<IonLabel position="floating"><Trans>Message Presets</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonSelect onIonChange={(e) => this.setDefaultCommands(e)}>
+                    <IonSelectOption value={-1} ><Trans>Clear</Trans></IonSelectOption>
+                    {this.props.protocolPresets.map((value: [string, Command[]], idx: number) => (
+                      <IonSelectOption key={'command' + idx} value={idx}>{value[0]}</IonSelectOption>
+                    ))}
+                  </IonSelect>
+                </IonItem>
+              </IonList>
+            </IonCardContent>
+          </IonCard>
+          <IonCard>
+
+            <IonCardHeader><Trans>Apperance</Trans></IonCardHeader>
+            <IonCardContent>
+              <IonList>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Beautify")}
+                    text={<Trans>If true, messages will be parsed for JSON content, which will then by displaced interactively. Works also with Crescience-Protocol!</Trans>}
+                    item={<IonLabel position="floating"><Trans>Beatify</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonToggle slot='end' checked={this.state.beautify} onIonChange={() => this.toggleBeautify()}></IonToggle>
                 </IonItem>
                 {/* <IonItem>
                   <DescriptionFloater
@@ -298,26 +423,6 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                   />
                   <IonInput type="number" placeholder="5" value={"" + this.state.timeout} onIonChange={(e: CustomEvent, key: string = 'timeout') => this.showSaveButton(e, key)}></IonInput>
                 </IonItem> */}
-                <IonItem>
-                  <DescriptionFloater
-                    title={this.props.t("Binary-Type")}
-                    text={<Trans>The binary format of binary data sent to the client</Trans>}
-                    item={<IonLabel position="floating"><Trans>Binary-Type</Trans></IonLabel>}
-                    theme={this.props.theme}
-                  />
-                  <IonSelect onIonChange={(e) => this.setBinaryType(e)} value={this.state.binaryType}>
-                  <IonSelectOption value={"int8"} ><Trans>Int8</Trans></IonSelectOption>
-                  <IonSelectOption value={"uint8"} ><Trans>UInt8</Trans></IonSelectOption>
-                  <IonSelectOption value={"int16"} ><Trans>Int16</Trans></IonSelectOption>
-                  <IonSelectOption value={"uint16"} ><Trans>UInt16</Trans></IonSelectOption>
-                  <IonSelectOption value={"int32"} ><Trans>Int32</Trans></IonSelectOption>
-                  <IonSelectOption value={"uint32"} ><Trans>UInt32</Trans></IonSelectOption>
-                  <IonSelectOption value={"biguint64"} ><Trans>Big Int64</Trans></IonSelectOption>
-                  <IonSelectOption value={"bigint64"} ><Trans>Big UInt64</Trans></IonSelectOption>
-                  <IonSelectOption value={"float32"} ><Trans>Float32</Trans></IonSelectOption>
-                  <IonSelectOption value={"float64"} ><Trans>Float64</Trans></IonSelectOption>
-                </IonSelect>
-                </IonItem>
                 {/* <IonItem>
                   <DescriptionFloater
                     title={this.props.t("Binary-Offset")}
@@ -333,25 +438,11 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
 
           <IonCard>
             <IonCardHeader>
-              <Trans>Commands</Trans>
+              <Trans>Sent Messages</Trans>
             </IonCardHeader>
 
             <IonCardContent className="ion-padding">
-              <IonItem>
-                <DescriptionFloater
-                  title={this.props.t("Protocol Presets")}
-                  text={<Trans>Select one of the predefined protocols</Trans>}
-                  item={<IonLabel position="floating"><Trans>Protocol Presets</Trans></IonLabel>}
-                  theme={this.props.theme}
-                />
-                <IonSelect onIonChange={(e) => this.setDefaultCommands(e)}>
-                  <IonSelectOption value={-1} ><Trans>Clear</Trans></IonSelectOption>
-                  {this.props.protocolPresets.map((value: [string, Command[]], idx:number)=>(
-                    <IonSelectOption key={'command'+idx} value={idx}>{value[0]}</IonSelectOption>
-                  ))}
-                </IonSelect>
-              </IonItem>
-              <IonItemDivider></IonItemDivider>
+              {/* <IonItemDivider></IonItemDivider> */}
               <IonList>
                 {
                   this.props.connection.commands.sort(((a, b) => (

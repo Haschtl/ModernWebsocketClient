@@ -61,7 +61,7 @@ const Menu: React.FunctionComponent<Props> = ({ connections, theme, setTheme, hi
             <IonLabel><Trans>Connections</Trans></IonLabel>
           </IonItem>
         </IonMenuToggle>
-        <IonItemDivider key={'connectedDivider'}></IonItemDivider>
+        {/* <IonItemDivider key={'connectedDivider'}></IonItemDivider> */}
         <ConnectionList
             connections={connections}
             hidden={false}
