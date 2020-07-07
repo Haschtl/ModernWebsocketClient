@@ -164,7 +164,7 @@ class ChatList extends React.Component<Props, State> {
             loadingText="Loading more messages...">
           </IonInfiniteScrollContent>
         </IonInfiniteScroll>
-        <IonList>
+        <IonList className="chat-list">
           {messages.map((m: Message, idx: number) => (
             <MessageBubbler
               connection={this.props.connection}

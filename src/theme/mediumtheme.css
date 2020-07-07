@@ -68,7 +68,7 @@
   --ion-color-light-tint: #FFF275;
 
 
-  --ion-color-step-50: #000000;
+  --ion-color-step-50: rgb(70, 70, 70);
   --ion-color-step-100: #f3f3f3;
   --ion-color-step-150: #f3f3f3;
   --ion-color-step-200: #f3f3f3;

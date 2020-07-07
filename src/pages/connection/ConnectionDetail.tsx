@@ -352,15 +352,6 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
               <IonList>
                 <IonItem>
                   <DescriptionFloater
-                    title={this.props.t("Password (-> Github-repo)")}
-                    text={<Trans>Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.</Trans>}
-                    item={<IonLabel position="floating"><Trans>Password</Trans></IonLabel>}
-                    theme={this.props.theme}
-                  />
-                  <IonInput type="password" placeholder="" value={this.state.password} onIonChange={(e: CustomEvent, key: string = 'password') => this.showSaveButton(e, key)}></IonInput>
-                </IonItem>
-                <IonItem>
-                  <DescriptionFloater
                     title={this.props.t("Binary-Type")}
                     text={<Trans>The binary format of binary data sent to the client</Trans>}
                     item={<IonLabel position="floating"><Trans>Binary-Type</Trans></IonLabel>}
@@ -404,6 +395,15 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                     ))}
                   </IonSelect>
                 </IonItem>
+                <IonItem>
+                  <DescriptionFloater
+                    title={this.props.t("Password (-> Github-repo)")}
+                    text={<Trans>Enter the password of the Websocket-Server here. Look at Github to see the implementation of the password-encryption.</Trans>}
+                    item={<IonLabel position="floating"><Trans>Password (-&gt; Github-repo)</Trans></IonLabel>}
+                    theme={this.props.theme}
+                  />
+                  <IonInput type="password" placeholder="" value={this.state.password} onIonChange={(e: CustomEvent, key: string = 'password') => this.showSaveButton(e, key)}></IonInput>
+                </IonItem>
               </IonList>
             </IonCardContent>
           </IonCard>
@@ -416,7 +416,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
                   <DescriptionFloater
                     title={this.props.t("Beautify")}
                     text={<Trans>If true, messages will be parsed for JSON content, which will then by displaced interactively. Works also with Crescience-Protocol!</Trans>}
-                    item={<IonLabel position="floating"><Trans>Beatify</Trans></IonLabel>}
+                    item={<IonLabel position="floating"><Trans>Beautify</Trans></IonLabel>}
                     theme={this.props.theme}
                   />
                   <IonToggle slot='end' checked={this.state.beautify} onIonChange={() => this.toggleBeautify()}></IonToggle>
@@ -452,7 +452,7 @@ class ConnectionDetail extends React.PureComponent<Props & WithTranslation, Stat
               {/* <IonItemDivider></IonItemDivider> */}
               <IonList>
                 {
-                  this.state.commands.sort(((a, b) => (
+                  this.state.commands.filter((value: Command) => value.num>0).sort(((a, b) => (
                     b.num - a.num
                   ))).map((value: Command, index: number) => (
                     <IonItem key={'command' + index} onClick={(e) => this.removeCommand(value)}>

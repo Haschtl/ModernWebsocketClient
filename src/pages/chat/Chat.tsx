@@ -223,7 +223,8 @@ class Chat extends Component<Props & WithTranslation, State> {
         <IonFooter translucent={false} className="Footer">
           {/* {(this.state.textinput.length > 0 && commands.length > 0) && */}
           <Collapse in={this.state.showPopup} collapsedHeight={0}>
-            <IonList className={"Recomm"} style={{ overflow: "auto", whiteSpace: "nowrap", maxHeight: "30vh", minHeight: "30vh" }}>
+            <IonList className={"Recomm"} style={{ overflow: "auto", whiteSpace: "nowrap", 
+            maxHeight: "30vh", minHeight: "30vh" }}>
               {this.state.commands.map((c: Command, idx: number) => {
                 var col = undefined
                 if (idx === this.state.selectedIdx) {
