@@ -2,7 +2,9 @@
 
 # OpenSource Websocket Client v1.6
 [Homepage](https://haschtl.github.io/ModernWebsocketClient/)
-[Demo](https://modern-websocket-client.web.app)
+
+[WebApp](https://modern-websocket-client.web.app)
+
 ## Description
 
 - This is an **OpenSource** project - so everyone is welcome to make further improvements (issues, feature requests, pull requests, ...).
