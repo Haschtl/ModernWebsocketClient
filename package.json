@@ -74,6 +74,6 @@
   "description": "Modern OpenSource WebSocket Client",
   "devDependencies": {
     "@capacitor/cli": "^2.2.1",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^5.0.1"
   }
 }
